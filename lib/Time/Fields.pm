@@ -1,4 +1,4 @@
-# 382C8tQ - Time::Fields.pm created by Pip@CPAN.org as an abstract base 
+# 382C8tQ - Time::Fields.pm created by Pip@CPAN.Org as an abstract base 
 #   class for more specialized Time objects (Time::Frame && Time::PT).
 # Notz: 
 #   timelocal($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)
@@ -33,8 +33,8 @@ Time::Fields - abstract objects to store distinct time fields
 
 =head1 VERSION
 
-This documentation refers to version 1.0.418BGcv of 
-Time::Fields, which was released on Thu Jan  8 11:16:38:57 2004.
+This documentation refers to version 1.0.41M4cZH of 
+Time::Fields, which was released on Thu Jan 22 04:38:35:17 2004.
 
 =head1 SYNOPSIS
 
@@ -199,7 +199,7 @@ Revision history for Perl extension Time::Fields:
 
 =over 4
 
-=item - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
+=item - 1.0.41M4cZH  Thu Jan 22 04:38:35:17 2004
 
 * combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
     for updates to Fields or Frame)
@@ -268,16 +268,16 @@ Copyleft :  I license this software under the GNU General Public
 
 =head1 AUTHOR
 
-Pip Stuart <Pip@CPAN.org>
+Pip Stuart <Pip@CPAN.Org>
 
 =cut
 
 package Time::Fields;
 use strict;
 use vars qw( $AUTOLOAD );
-our $VERSION     = '1.0.418BGcv'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.41M4cZH'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
-# See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
+# See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
 use overload 
   q("") => sub { # anonymous stringify()
              my @fdat = $_[0]->CYMDhmsfjz(); 
@@ -444,7 +444,7 @@ sub _color_fields { # return a color string for a Fields object
   } elsif($ctyp =~ /^h/i) { # HTML link && font color tag delimiters
     @clrz = @{$self->_field_colors('html')};
     $_    = '<font color="#' . $_ . '">' foreach(@clrz);
-    $rstr = '<a href="http://Ax9.org/pt?' . $fstr . '">';
+    $rstr = '<a href="http://Ax9.Org/pt?' . $fstr . '">';
     if(length($fstr) > 7) {
       while(length($fstr) > $coun) { $rstr .= $clrz[$coun] . substr($fstr, $coun++, 1) . '</font>'; }
     } else {

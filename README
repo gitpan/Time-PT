@@ -1,4 +1,4 @@
- 2CN4sip - Time::PT.pm (PipTime) created by Pip@CPAN.org to define 
+ 2CN4sip - Time::PT.pm (PipTime) created by Pip@CPAN.Org to define 
    simple objects for storing instants in time.
  Desc: PT describes a simple object which encapsulates 10 fields:
      Century, Year, Month, Day, hour, minute, second, frame, jink, zone
@@ -119,8 +119,8 @@ Time::PT - objects to store an instant in time
 
 VERSION
 
-This documentation refers to version 1.0.418BGcv of 
-Time::PT, which was released on Thu Jan  8 11:16:38:57 2004.
+This documentation refers to version 1.0.41M4cZH of 
+Time::PT, which was released on Thu Jan 22 04:38:35:17 2004.
 
 SYNOPSIS
 
@@ -229,7 +229,7 @@ available DestinationColorTypeFormats are:
 
   'ANSI'  # eg. \e[1;32m
   'zsh'   # eg. %{\e[1;33m%}
-  'HTML'  # eg. <a href="http://Ax9.org/pt?"><font color="#FF1B2B">
+  'HTML'  # eg. <a href="http://Ax9.Org/pt?"><font color="#FF1B2B">
   'Simp'  # eg. RbobYbGbCbUbPb
 
 pt
@@ -485,6 +485,11 @@ CHANGES
 
 Revision history for Perl extension Time::PT:
 
+- 1.0.41M4cZH  Thu Jan 22 04:38:35:17 2004
+
+* added Time::Frame::total_frames method, moved pt, fpt, && lspt
+    into bin/ for packaging as EXE_FILES
+
 - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
 
 * added HOW? POD section for mnemonics, created Time::Fields::_field_colors
@@ -566,5 +571,5 @@ Copyleft :  I license this software under the GNU General Public
 
 AUTHOR
 
-Pip Stuart <Pip@CPAN.org>
+Pip Stuart <Pip@CPAN.Org>
 

@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# 3AAFVlt - test.pl created by Pip@CPAN.org to validate Time::PT
+# 3AAFVlt - test.pl created by Pip@CPAN.Org to validate Time::PT
 #     functionality.  
 #   Before `make install' is performed this script should be run with
 #     `make test'.  After `make install' it should work as `perl test.pl'.
@@ -221,10 +221,10 @@ $rslt = $fldz->day();
 #&rprt($rslt == 4, "$rslt\n");
 #$fldz = Time::PT->new('241');
 #$rslt = $fldz->color('HTML');
-#&rprt($rslt eq '<a href="http://Ax9.org/pt?241"><font color="#FF1B2B">2</font><font color="#FF7B2B">4</font><font color="#FFFF1B">1</font></a>', "$rslt\n");
+#&rprt($rslt eq '<a href="http://Ax9.Org/pt?241"><font color="#FF1B2B">2</font><font color="#FF7B2B">4</font><font color="#FFFF1B">1</font></a>', "$rslt\n");
 #$fldz = Time::PT->new('3CB636B');
 #$rslt = $fldz->color('HTML');
-#&rprt($rslt eq '<a href="http://Ax9.org/pt?3CB636B"><font color="#FF1B2B">3</font><font color="#FF7B2B">C</font><font color="#FFFF1B">B</font><font color="#1BFF3B">6</font><font color="#1BFFFF">3</font><font color="#1B7BFF">6</font><font color="#BB1BFF">B</font></a>', "$rslt\n");
+#&rprt($rslt eq '<a href="http://Ax9.Org/pt?3CB636B"><font color="#FF1B2B">3</font><font color="#FF7B2B">C</font><font color="#FFFF1B">B</font><font color="#1BFF3B">6</font><font color="#1BFFFF">3</font><font color="#1B7BFF">6</font><font color="#BB1BFF">B</font></a>', "$rslt\n");
 #
 # these are for when 0 months/days can be handled by math functions
 #$fldz = Time::PT->new('7777777');

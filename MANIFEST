@@ -4,7 +4,9 @@ lib/Time/Fields.pm
 MANIFEST
 test.pl
 bounds_test.pl
-pt
+bin/pt
+bin/fpt
+bin/lspt
 cal.txt
 tz.txt
 MANIFEST.SKIP

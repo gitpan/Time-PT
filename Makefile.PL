@@ -3,9 +3,14 @@ use ExtUtils::MakeMaker;
 # # the contents of the Makefile that is written.
 WriteMakefile(
   'NAME'         => 'Time::PT',
-  'VERSION'      => '1.0.418BGcv',
+  'VERSION'      => '1.0.41M4cZH',
   'ABSTRACT'     => 'objects to store an instant in time',
-  'AUTHOR'       => 'Pip Stuart <Pip@CPAN.org>',
+  'AUTHOR'       => 'Pip Stuart <Pip@CPAN.Org>',
+  'EXE_FILES'    => [ 
+                      'bin/fpt',
+                      'bin/lspt',
+                      'bin/pt',
+                    ],
   'PREREQ_PM'    => {
     'Time::HiRes'                    => 0,
     'Time::DaysInMonth'              => 0,

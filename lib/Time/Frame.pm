@@ -1,4 +1,4 @@
-# 37VG26k - Time::Frame.pm created by Pip@CPAN.org to make simple
+# 37VG26k - Time::Frame.pm created by Pip@CPAN.Org to make simple
 #   objects for frames of time.
 # Desc: Frame describes a simple object which encapsulates 10 fields:
 #     Century, Year, Month, Day, hour, minute, second, frame, jink, zone
@@ -45,8 +45,8 @@ Time::Frame - objects to store a length of time
 
 =head1 VERSION
 
-This documentation refers to version 1.0.418BGcv of 
-Time::Frame, which was released on Thu Jan  8 11:16:38:57 2004.
+This documentation refers to version 1.0.41M4cZH of 
+Time::Frame, which was released on Thu Jan 22 04:38:35:17 2004.
 
 =head1 SYNOPSIS
 
@@ -72,6 +72,9 @@ as well as the (default) smallest unit of measurement.
 =head1 2DO
 
 =over 2
+
+=item - copy total_frames into AUTOLOAD for (in|as|total)_(CYMDhmsfj)
+          functions which convert to any field
 
 =item - better ways to specify common verbose sizes
 
@@ -100,10 +103,9 @@ Time::Piece module written by Matt Sergeant <matt@sergeant.org>
 
 =head2 new(<InitType>, <InitData>)
 
-Time::Frame's constructor can be called
-as a class method to create a brand new object or as an object 
-method to copy an existing object.  Beyond that, new() can 
-initialize Frame objects 3 different ways:
+Time::Frame's constructor can be called as a class method to create a
+brand new object or as an object method to copy an existing object.
+Beyond that, new() can initialize Frame objects 3 different ways:
 
    -1) <packedB64InitStringImplies'str'>
       eg. Time::Frame->new('0123456789');
@@ -113,6 +115,11 @@ initialize Frame objects 3 different ways:
       eg. Time::Frame->new('list' => [0, 1, 2..9]);
     2) 'hash' => <hashRef>
       eg. Time::Frame->new('hash' => {'jink' => 8, 'year' => 2003})
+
+=head2 total_frames()
+
+total_frames simply returns the total number of frames a Time::Frame
+object specifies.
 
 =head2 color(<DestinationColorTypeFormat>)
 
@@ -124,7 +131,7 @@ available DestinationColorTypeFormats are:
 
     'ANSI'  # eg. \e[1;32m
     'zsh'   # eg. %{\e[1;33m%}
-    'HTML'  # eg. <a href="http://Ax9.org/pt?"><font color="#FF1B2B">
+    'HTML'  # eg. <a href="http://Ax9.Org/pt?"><font color="#FF1B2B">
     'Simp'  # eg. RbobYbGbCbUbPb
 
 The following methods allow access to individual fields of 
@@ -210,7 +217,7 @@ Revision history for Perl extension Time::Frame:
 
 =over 4
 
-=item - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
+=item - 1.0.41M4cZH  Thu Jan 22 04:38:35:17 2004
 
 * combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
     for updates to Fields or Frame)
@@ -266,7 +273,7 @@ Copyleft :  I license this software under the GNU General Public
 
 =head1 AUTHOR
 
-Pip Stuart <Pip@CPAN.org>
+Pip Stuart <Pip@CPAN.Org>
 
 =cut
 
@@ -277,9 +284,9 @@ use base qw( Time::Fields );
 use vars qw( $AUTOLOAD );
 use Carp;
 use Math::BaseCnv qw( :all );
-our $VERSION     = '1.0.418BGcv'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.41M4cZH'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
-# See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
+# See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
 use constant ONE_MINUTE          => '1 min';                  #         60;
 use constant ONE_HOUR            => '1 hour';                 #      3_600;
 use constant ONE_DAY             => '1 day';                  #     86_400;
@@ -408,7 +415,7 @@ sub _color_fields {
   } elsif($ctyp =~ /^h/i) { # HTML link && font color tag delimiters
     @clrz = @{$self->_field_colors('html')};
     $_    = '<font color="#' . $_ . '">' foreach(@clrz);
-    $rstr = '<a href="http://Ax9.org/pt?fr=' . $fstr . '">';
+    $rstr = '<a href="http://Ax9.Org/pt?fr=' . $fstr . '">';
     if(length($fstr) > 7) {
       while(length($fstr) > $coun) { $rstr .= $clrz[$coun] . substr($fstr, $coun++, 1) . '</font>'; }
     } else {
@@ -490,6 +497,20 @@ sub new {
     }
   }
   return($self);
+}
+
+sub total_frames { # return the integer number of frames in a Time::Frame obj
+  my $self = shift; my $totl = 0;
+  $totl += ($self->j() * (1.0 / 60.0));
+  $totl +=  $self->f();
+  $totl += ($self->s() * 60);
+  $totl += ($self->m() * 60 * 60);
+  $totl += ($self->h() * 60 * 60 * 60);
+  $totl += ($self->D() * 60 * 60 * 60 * 24);
+  $totl += ($self->M() * 60 * 60 * 60 * 24 * 30.4368537808642);
+  $totl += ($self->Y() * 60 * 60 * 60 * 24 * 365.24225);
+  $totl += ($self->C() * 60 * 60 * 60 * 24 * 365.24225 * 100);
+  return($totl);
 }
 
 #sub AUTOLOAD { # methods (created as necessary)
