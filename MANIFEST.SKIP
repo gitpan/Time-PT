@@ -1,0 +1,8 @@
+\bCVS\b
+^Makefile$
+^MANIFEST\.bak$
+\.bak$
+\.swp$
+\..*\.swp$
+\b\.xvpics\b
+~$
