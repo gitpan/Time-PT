@@ -45,8 +45,8 @@ Time::Frame - objects to store a length of time
 
 =head1 VERSION
 
-This documentation refers to version 1.0.41M4cZH of 
-Time::Frame, which was released on Thu Jan 22 04:38:35:17 2004.
+This documentation refers to version 1.0.42M3ChX of 
+Time::Frame, which was released on Sun Feb 22 03:12:43:33 2004.
 
 =head1 SYNOPSIS
 
@@ -88,7 +88,7 @@ The reason I created Frame was that I have grown so enamored with
 Base64 representations of everything around me that I was 
 compelled to write a simple clock utility ( `pt` ) using Base64.
 This demonstrated the benefit to be gained from time objects with
-distinct fields && configurable precision.  Thus, Time::Fields
+distinct fields && configurable precision.  Thus, L<Time::Fields>
 was written to be the abstract base class for:
 
     Time::Frame  ( creates objects which represent spans    of time )
@@ -98,23 +98,23 @@ was written to be the abstract base class for:
 =head1 USAGE
 
 Many of Time::Frame's methods have been patterned after the excellent
-Time::Piece module written by Matt Sergeant <matt@sergeant.org>
+L<Time::Piece> module written by Matt Sergeant <matt@sergeant.org>
 && Jarkko Hietaniemi <jhi@iki.fi>.
 
 =head2 new(<InitType>, <InitData>)
 
 Time::Frame's constructor can be called as a class method to create a
 brand new object or as an object method to copy an existing object.
-Beyond that, new() can initialize Frame objects 3 different ways:
+Beyond that, new() can initialize Frame objects in the following ways:
 
-   -1) <packedB64InitStringImplies'str'>
-      eg. Time::Frame->new('0123456789');
-    0) 'str'  => <packedB64InitString>
-      eg. Time::Frame->new('str'  => '0A1B2C3D4E');
-    1) 'list' => <arrayRef>
-      eg. Time::Frame->new('list' => [0, 1, 2..9]);
-    2) 'hash' => <hashRef>
-      eg. Time::Frame->new('hash' => {'jink' => 8, 'year' => 2003})
+  * <packedB64InitStringImplies'str'>
+    eg. Time::Frame->new('0123456789');
+  * 'str'  => <packedB64InitString>
+    eg. Time::Frame->new('str'  => '0A1B2C3D4E');
+  * 'list' => <arrayRef>
+    eg. Time::Frame->new('list' => [0, 1, 2..9]);
+  * 'hash' => <hashRef>
+    eg. Time::Frame->new('hash' => {'jink' => 8, 'year' => 2003})
 
 =head2 total_frames()
 
@@ -148,45 +148,8 @@ Time::Frame objects:
   $t->j  or  $t->jink
   $t->z  or  $t->zone
 
-Any combination of above single letters can be used as well.  
-Following are some common useful examples:
-
-  $t->hms                 # returns list of fields eg. [12, 34, 56]
-  $t->hms(12, 56, 34)     # sets fields: h = 12, m = 56, s = 34
-  $t->hmsf                # [12, 34, 56, 12]
-  $t->hmsfj               # [12, 34, 56, 12, 34]
-  $t->hmsfjz              # [12, 34, 56, 12, 34, 16]
-  $t->time                # same as $t->hms
-  $t->alltime             # same as $t->hmsfjz
-  $t->YMD                 # [2000,  2,   29]
-  $t->MDY                 # [   2, 29, 2000]
-  $t->DMY                 # [  29,  2, 2000]
-  $t->CYMD                # [  20,  0,    2, 29]
-  $t->date                # same as $t->YMD
-  $t->alldate             # same as $t->CYMD
-  $t->CYMDhmsfjz          # [  20,  0,    2, 29, 12, 13, 56, 12, 13, 16]
-  $t->all                 # same as $t->CYMDhmsfjz
-  $t->dt                  # same as $t->CYMDhmsfjz
-  "$t"                    # same as $t->CYMDhmsfjz
-
-Method names can be in any case with the following exceptions.  
-Special handling exists to resolve ambiguity between the Month && 
-minute fields.  If a lowercase 'm' is used adjacent to a 'y' or 'd'
-of either case, it is interpreted as Month.  Otherwise, the case of 
-the 'm' distinguishes Month from minute.  An uppercase 'M' is ALWAYS
-Month.  An adjacent uppercase 'H' or 'S' will not turn an uppercase
-'M' into minute.  Method names which need to specify Month or minute
-fields can also optionally specify the distinguishing vowel 
-('o' or 'i') instead of 'M' or 'm'.
-
-  $t->ymd                 # same as $t->YMD
-  $t->dmy                 # same as $t->DMY
-  $t->MmMm                # Month minute Month minute
-  $t->HMS                 # hour Month second! NOT same as $t->hms 
-  $t->yod                 # same as $t->YMD
-  $t->chmod               # Century hour minute Month Day
-  $t->FooIsMyJoy          # frame Month Month minute second Month Year
-                            #   jink Month Year
+Please see L<Time::Fields> for a more thorough description of field
+accessor methods.
 
 =head1 NOTES
 
@@ -217,7 +180,7 @@ Revision history for Perl extension Time::Frame:
 
 =over 4
 
-=item - 1.0.41M4cZH  Thu Jan 22 04:38:35:17 2004
+=item - 1.0.42M3ChX  Sun Feb 22 03:12:43:33 2004
 
 * combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
     for updates to Fields or Frame)
@@ -254,13 +217,15 @@ or uncompress the package && run the standard:
 
 Time::Frame requires:
 
-  Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle number-base conversion
-  Time::Fields        to provide underlying object structure
+L<Carp>                to allow errors to croak() from calling sub
+
+L<Math::BaseCnv>       to handle number-base conversion
+
+L<Time::Fields>        to provide underlying object structure
 
 =head1 SEE ALSO
 
-Time::PT
+L<Time::PT>
 
 =head1 LICENSE
 
@@ -284,7 +249,7 @@ use base qw( Time::Fields );
 use vars qw( $AUTOLOAD );
 use Carp;
 use Math::BaseCnv qw( :all );
-our $VERSION     = '1.0.41M4cZH'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.42M3ChX'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
 use constant ONE_MINUTE          => '1 min';                  #         60;
@@ -310,7 +275,7 @@ use overload
   q(cmp) => \&_cmp_str,
   q(+)   => \&_add,
   q(-)   => \&_sub;
-  
+
 sub _stringify { # cat non-zero b64 fields down to frame or should just be used fields
   my @fdat = $_[0]->CYMDhmsfjz(); 
   my @attz = $_[0]->_attribute_names();
@@ -422,6 +387,16 @@ sub _color_fields {
       while(length($fstr) > $coun) { $rstr .= $clrz[(8 - length($fstr) + $coun)] . substr($fstr, $coun++, 1) . '</font>'; }
     }
     $rstr .= '</a>';
+  } elsif($ctyp =~ /^4/i) { # 4nt prompt needs verbose color codes
+    @clrz = @{$self->_field_colors('4nt')};
+    for(my $i=0; $i<@clrz; $i++) {
+      $clrz[$i] = ' & color ' . $clrz[$i] . ' & echos ';
+    }
+    if(length($fstr) > 7) {
+      while(length($fstr) > $coun) { $rstr .= $clrz[$coun] . substr($fstr, $coun++, 1); }
+    } else {
+      while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun)] . substr($fstr, $coun++, 1); }
+    }
   } else { # ANSI escapes
     @clrz = @{$self->_field_colors('ansi')};
     if($ctyp =~ /^z/i) { # zsh prompt needs delimited %{ ANSI %}

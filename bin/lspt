@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#l | perl -pe s/(\w{3}\s+\d+\s+\d{2}:\d{2})/`pt -c "$1 2004"`/e
+#ls -l | perl -pe s/(\w{3}\s+\d+\s+\d{2}:\d{2})/`pt -c "$1 2004"`/e
 
 use strict;
 use Math::BaseCnv qw(:all);

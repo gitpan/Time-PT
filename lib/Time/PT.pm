@@ -119,8 +119,8 @@ Time::PT - objects to store an instant in time
 
 =head1 VERSION
 
-This documentation refers to version 1.0.41M4cZH of 
-Time::PT, which was released on Thu Jan 22 04:38:35:17 2004.
+This documentation refers to version 1.0.42M3ChX of 
+Time::PT, which was released on Sun Feb 22 03:12:43:33 2004.
 
 =head1 SYNOPSIS
 
@@ -133,17 +133,17 @@ Time::PT, which was released on Thu Jan 22 04:38:35:17 2004.
 
 =head1 DESCRIPTION
 
-This module has been adapted from the Time::Piece module 
+This module has been adapted from the L<Time::Piece> module 
 written by Matt Sergeant <matt@sergeant.org> && Jarkko 
 Hietaniemi <jhi@iki.fi>.  Time::PT inherits base 
-data structure && object methods from Time::Fields.  
+data structure && object methods from L<Time::Fields>.  
 PT was written to simplify storage && calculation 
 of encoded, yet distinct && human-readable, time data 
 objects.
 
 This module (Time::PT) does not replace the standard localtime &&
-gmtime functions like Time::Piece but Time::PT objects behave
-almost identically to Time::Piece objects otherwise (since it
+gmtime functions like L<Time::Piece> but Time::PT objects behave
+almost identically to L<Time::Piece> objects otherwise (since it
 was adapted from... I said that already =) ).
 
 =head1 2DO
@@ -154,6 +154,9 @@ was adapted from... I said that already =) ).
 
 =item - add Time::Zone stuff to use && match zone field reasonably
 
+=item - replace legacy pt() with tested new() wrapper && fix all apps to
+          use objs instead of local pt()
+
 =item - flesh out constructor init data parsing && formats supported
 
 =item - consider epoch functions like _epoch([which epoch]) or individuals
@@ -162,8 +165,6 @@ was adapted from... I said that already =) ).
 =item - mk PT->new able to create from different 'epoch' init types
 
 =item - fix weird 0 month && 0 day problems
-
-=item - replace legacy pt() with new() wrapper
 
 =item -     What else does PT need?
 
@@ -175,7 +176,7 @@ The reason I created PT was that I have grown so enamored with
 Base64 representations of everything around me that I was 
 compelled to write a simple clock utility ( `pt` ) using Base64.
 This demonstrated the benefit to be gained from time objects with
-distinct fields && configurable precision.  Thus, Time::Fields
+distinct fields && configurable precision.  Thus, L<Time::Fields>
 was written to be the abstract base class for:
 
   Time::Frame  ( creates objects which represent spans    of time )
@@ -194,17 +195,17 @@ remember every 4th uppercase Base64 character:
   Some     28  
   Where?   32              DayOfMonth  will be less than        'W'.
 
-  Cwelve   Cool    COW (Month Hour Day thresholds)
-  Gixteen  Guys    Girls
-  Kwenty   Keep    Keep
-  Onty4    On      On
-  Swenty8  Sayin'  Sayin'      Sippin'
-  Whirty2  Wassup  WeeDoggies  Water
+  Cool    COW (Month Hour Day thresholds)
+  Guys    Girls
+  Keep    Keep
+  On      On                   Off
+  Sayin'  Sayin'      Sippin'  Sea
+  Wassup  WeeDoggies  Water    Water
 
 =head1 USAGE
 
 Many of Time::PT's methods have been patterned after the excellent
-Time::Piece module written by Matt Sergeant <matt@sergeant.org>
+L<Time::Piece> module written by Matt Sergeant <matt@sergeant.org>
 && Jarkko Hietaniemi <jhi@iki.fi>.
 
 =head2 new(<InitType>, <InitData>)
@@ -214,13 +215,13 @@ as a class method to create a brand new object or as an object
 method to copy an existing object.  Beyond that, new() can 
 initialize PT objects 3 different ways:
 
- -1) <packedB64InitStringImplies'str'>
+  * <packedB64InitStringImplies'str'>
     eg. Time::PT->new('3C79jo0');
-  0) 'str'  => <packedB64InitString>
+  * 'str'  => <packedB64InitString>
     eg. Time::PT->new('str'  => '0A1B2C3D4E');
-  1) 'list' => <arrayRef>
+  * 'list' => <arrayRef>
     eg. Time::PT->new('list' => [0, 1, 2..9]);
-  2) 'hash' => <hashRef>
+  * 'hash' => <hashRef>
     eg. Time::PT->new('hash' => {'jink' => 8, 'year' => 2003})
 
 =head2 color(<DestinationColorTypeFormat>)
@@ -234,6 +235,7 @@ available DestinationColorTypeFormats are:
   'ANSI'  # eg. \e[1;32m
   'zsh'   # eg. %{\e[1;33m%}
   'HTML'  # eg. <a href="http://Ax9.Org/pt?"><font color="#FF1B2B">
+  '4NT'   # eg. color 09 & 
   'Simp'  # eg. RbobYbGbCbUbPb
 
 =head2 pt
@@ -273,54 +275,14 @@ Time::PT objects:
   $t->j  or  $t->jink
   $t->z  or  $t->zone
 
-Any combination of above single letters can be used as well.  
-Following are some common useful examples:
-
-  $t->hms                 # returns list of fields eg. [12, 34, 56]
-  $t->hms(12, 56, 34)     # sets fields: h = 12, m = 56, s = 34
-  $t->hmsf                # [12, 34, 56, 12]
-  $t->hmsfj               # [12, 34, 56, 12, 34]
-  $t->hmsfjz              # [12, 34, 56, 12, 34, 16]
-  $t->time                # same as $t->hms
-  $t->alltime             # same as $t->hmsfjz
-  $t->YMD                 # [2000,  2,   29]
-  $t->MDY                 # [   2, 29, 2000]
-  $t->DMY                 # [  29,  2, 2000]
-  $t->CYMD                # [  20,  0,    2, 29]
-  $t->date                # same as $t->YMD
-  $t->alldate             # same as $t->CYMD
-  $t->CYMDhmsfjz          # [  20,  0,    2, 29, 12, 13, 56, 12, 13, 16]
-  $t->pt7                 # same as $t->YMDhmsf
-  $t->all                 # same as $t->CYMDhmsfjz
-  $t->dt                  # same as $t->CYMDhmsfjz
-  "$t"                    # same as $t->CYMDhmsfjz except only prints
-                          #   fields which are "used" which by default
-                          #   is the same as the $t->YMDhmsf of pt7()
-
-Method names can be in any case with the following exceptions.  
-Special handling exists to resolve ambiguity between the Month && 
-minute fields.  If a lowercase 'm' is used adjacent to a 'y' or 'd'
-of either case, it is interpreted as Month.  Otherwise, the case of 
-the 'm' distinguishes Month from minute.  An uppercase 'M' is ALWAYS
-Month.  An adjacent uppercase 'H' or 'S' will not turn an uppercase
-'M' into minute.  Method names which need to specify Month or minute
-fields can also optionally specify the distinguishing vowel 
-('o' or 'i') instead of 'M' or 'm'.
-
-  $t->ymd                 # same as $t->YMD
-  $t->dmy                 # same as $t->DMY
-  $t->MmMm                # Month minute Month minute
-  $t->HMS                 # hour Month second! NOT same as $t->hms 
-  $t->yod                 # same as $t->YMD
-  $t->chmod               # Century hour minute Month Day
-  $t->FooIsMyJoy          # frame Month Month minute second Month Year
-                          #   jink Month Year
+Please see L<Time::Fields> for further description of field 
+accessor methods.
 
 After importing this module, when you use localtime or gmtime in a
 scalar context, you DO NOT get a special Time::PT object like you
-would when using Time::Piece.  This module relies on a new() 
+would when using L<Time::Piece>.  This module relies on a new() 
 constructor instead.  The following methods are available on 
-Time::PT objects though && remain as similar to Time::Piece
+Time::PT objects though && remain as similar to L<Time::Piece>
 functionality as makes sense.
 
   $t->frm                 # also as $t->frame && $t->subsecond
@@ -422,10 +384,11 @@ If a calculation is done with a raw string parameter instead of an
 instantiated object, the most likely appropriate object 
 constructor is called on it.  These init strings must adhere to
 the implied 'str' format for auto-creating objects;  I aim to
-support a much wider array of operations && to interoperate with 
-Time::Piece && Time::Seconds someday but not yet.
+support a much wider array of operations && to make this module
+smoothly interoperate with both L<Time::Piece> && L<Time::Seconds>
+someday but not yet.
 
-  my $cur_pt             = Time::PT->new();# Dhmsf
+  my $cur_pt             = Time::PT->new();
   my $half_hour_from_now = $cur_pt + 'U00';
 
 The following are valid (where $t0 and $t1 are Time::PT objects
@@ -491,17 +454,27 @@ Revision history for Perl extension Time::PT:
 
 =over 4
 
+=item - 1.0.42M3ChX  Sun Feb 22 03:12:43:33 2004
+
+* added 4NT option to color codes in Fields && color() members in Frame && PT
+
+* updated POD links && CHANGES chronology
+
 =item - 1.0.41M4cZH  Thu Jan 22 04:38:35:17 2004
 
-* added Time::Frame::total_frames method, moved pt, fpt, && lspt
-    into bin/ for packaging as EXE_FILES
+* moved pt, fpt, && lspt into bin/ for packaging as EXE_FILES
+
+* added Time::Frame::total_frames method
 
 =item - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
 
-* added HOW? POD section for mnemonics, created Time::Fields::_field_colors
-    (centralized base class color codes) && updated Frame && PT 
-    _color_fields, moved Curses::Simp::ptCC into Time::PT::ptcc for
-    PipTime-specific Simp Color Codes
+* moved Curses::Simp::ptCC into Time::PT::ptcc for PipTime-specific Simp
+    Color Codes
+
+* created Time::Fields::_field_colors (centralized base class color codes)
+    && updated Frame && PT _color_fields
+
+* added HOW? POD section for mnemonics
 
 =item - 1.0.3CVL3V4  Wed Dec 31 21:03:31:04 2003
 
@@ -551,22 +524,29 @@ or uncompress the package && run the standard:
 
 Time::PT requires:
 
-  Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle simple number-base conversion
-  Time::DayOfWeek       also stores global day && month names
-  Time::DaysInMonth   
-  Time::Fields        to provide underlying object structure
-  Time::Frame         to represent spans of time
+L<Carp>                to allow errors to croak() from calling sub
+
+L<Math::BaseCnv>       to handle simple number-base conversion
+
+L<Time::DayOfWeek>       also stores global day && month names
+
+L<Time::DaysInMonth>   
+
+L<Time::Fields>        to provide underlying object structure
+
+L<Time::Frame>         to represent spans of time
 
 Time::PT uses (if available):
 
-  Time::HiRes         to provide subsecond time precision
-  Time::Local         to turn epoch seconds back into a real date
-  Time::Zone           not utilized yet
+L<Time::HiRes>         to provide subsecond time precision
+
+L<Time::Local>         to turn epoch seconds back into a real date
+
+L<Time::Zone>           not utilized yet
 
 =head1 SEE ALSO
 
-Time::Frame
+L<Time::Frame>
 
 =head1 LICENSE
 
@@ -598,7 +578,7 @@ my $hirs = eval("use   Time::HiRes; 1") || 0;
 my $locl = eval("use   Time::Local; 1") || 0;
 my $zown = eval("use   Time::Zone;  1") || 0;
 #my $simp = eval("use Curses::Simp;  1") || 0;
-our $VERSION     = '1.0.41M4cZH'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.42M3ChX'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
 our @EXPORT      = qw(pt ptcc);
@@ -1069,8 +1049,9 @@ sub expand {
 
 # adds color codes corresponding to each field according to ColorTYPe
 #   (/^s/i) ? Curses::Simp color codes
-#           : (/^h/i) ? HTML links && font color tag delimiters
-#           : ANSI color escapes (/^z/i) ? wrapped in zsh delimiters;
+# : (/^h/i) ? HTML links && font color tag delimiters
+# : (/^4/i) ? 4NT verbose color codes
+# : ANSI color escapes (/^z/i) ? wrapped in zsh delimiters;
 sub _color_fields {
   my $self = shift;
   my $fstr = shift || ' ' x 10; $fstr =~ s/0+$// if(length($fstr) <= 7);
@@ -1093,6 +1074,16 @@ sub _color_fields {
       while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun)] . substr($fstr, $coun++, 1) . '</font>'; }
     }
     $rstr .= '</a>';
+  } elsif($ctyp =~ /^4/i) { # 4NT prompt needs verbose color codes
+    @clrz = @{$self->_field_colors('4nt')};
+    for(my $i=0; $i<@clrz; $i++) {
+      $clrz[$i] = ' & color ' . $clrz[$i] . ' & echos ';
+    }
+    if(length($fstr) > 7) {
+      while(length($fstr) > $coun) { $rstr .= $clrz[$coun] . substr($fstr, $coun++, 1); }
+    } else {
+      while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun)] . substr($fstr, $coun++, 1); }
+    }
   } else { # ANSI escapes
     @clrz = @{$self->_field_colors('ansi')};
     if($ctyp =~ /^z/i) { # zsh prompt needs delimited %{ ANSI %}

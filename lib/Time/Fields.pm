@@ -33,8 +33,8 @@ Time::Fields - abstract objects to store distinct time fields
 
 =head1 VERSION
 
-This documentation refers to version 1.0.41M4cZH of 
-Time::Fields, which was released on Thu Jan 22 04:38:35:17 2004.
+This documentation refers to version 1.0.42M3ChX of 
+Time::Fields, which was released on Sun Feb 22 03:12:43:33 2004.
 
 =head1 SYNOPSIS
 
@@ -53,15 +53,15 @@ along with methods to manipulate those fields && modify their
 default presentation.  Normally, a frame is one 60th-of-a-
 second && a jink is one 60th-of-a-frame or about 0.3 milliseconds.
 The plural for 'jink' is 'jinx'.  Fields data && methods are 
-meant to be inherited by other classes (namely Time::Frame && 
-Time::PT) which implement specific useful interpretations of 
+meant to be inherited by other classes (namely L<Time::Frame> && 
+L<Time::PT>) which implement specific useful interpretations of 
 individual Time::Fields.
 
 =head1 2DO
 
 =over 2
 
-=item - use_? filters should get auto-set when non-used fields get assigned
+=item - use_? filters should get auto-set when unused fields get assigned
 
 =item -     What else does Fields need?
 
@@ -83,7 +83,7 @@ was written to be the abstract base class for:
 =head1 USAGE
 
 Many of Time::Fields's methods have been patterned after the 
-excellent Time::Piece module written by Matt Sergeant 
+excellent L<Time::Piece> module written by Matt Sergeant 
 <matt@sergeant.org> && Jarkko Hietaniemi <jhi@iki.fi>.
 
 =head2 new(<InitType>, <InitData>)
@@ -91,16 +91,16 @@ excellent Time::Piece module written by Matt Sergeant
 Time::Fields's constructor can be 
 called as a class method to create a brand new object or as
 an object method to copy an existing object.  Beyond that,
-new() can initialize Fields objects 3 different ways:
+new() can initialize Fields objects the following ways:
 
-   -1) <packedB64InitStringImplies'str'>
-      eg. Time::Fields->new('0123456789');
-    0) 'str'  => <packedB64InitString>
-      eg. Time::Fields->new('str'  => '0123456789');
-    1) 'list' => <arrayRef>
-      eg. Time::Fields->new('list' => [0, 1, 2..9]);
-    2) 'hash' => <hashRef>
-      eg. Time::Fields->new('hash' => {'jink' => 8, 'year' => 2003})
+  * <packedB64InitStringImplies'str'>
+    eg. Time::Fields->new('0123456789');
+  * 'str'  => <packedB64InitString>
+    eg. Time::Fields->new('str'  => '0123456789');
+  * 'list' => <arrayRef>
+    eg. Time::Fields->new('list' => [0, 1, 2..9]);
+  * 'hash' => <hashRef>
+    eg. Time::Fields->new('hash' => {'jink' => 8, 'year' => 2003})
 
 b<*Note*>  If only a valid 'str'-type parameter is given to new 
 (but no accompanying initialization value), the parameter 
@@ -148,15 +148,17 @@ Following are some common useful examples:
   $t->all                 # same as $t->CYMDhmsfjz
   "$t"                    # same as $t->CYMDhmsfjz
 
-Method names can be in any case with the following exceptions.  
-Special handling exists to resolve ambiguity between the Month && 
-minute fields.  If a lowercase 'm' is used adjacent to a 'y' or 'd'
-of either case, it is interpreted as Month.  Otherwise, the case of 
-the 'm' distinguishes Month from minute.  An uppercase 'M' is ALWAYS
-Month.  An adjacent uppercase 'H' or 'S' will not turn an uppercase
-'M' into minute.  Method names which need to specify Month or minute
-fields can also optionally specify the distinguishing vowel 
-('o' or 'i') instead of 'M' or 'm'.
+=head2 Month / minute Exceptions
+
+Fields object method names can be in any case with the following
+exceptions.  Special handling exists to resolve ambiguity between
+the Month && minute fields.  If a lowercase 'm' is used adjacent to
+a 'y' or 'd' of either case, it is interpreted as Month.  Otherwise,
+the case of the 'm' distinguishes Month from minute.  An uppercase
+'M' is ALWAYS Month.  An adjacent uppercase 'H' or 'S' will not turn
+an uppercase 'M' into minute.  Method names which need to specify
+Month or minute fields can also optionally be uniquely specified by
+their distinguishing vowel ('o' or 'i') instead of 'M' or 'm'.
 
   $t->ymd                 # same as $t->YMD
   $t->dmy                 # same as $t->DMY
@@ -199,7 +201,7 @@ Revision history for Perl extension Time::Fields:
 
 =over 4
 
-=item - 1.0.41M4cZH  Thu Jan 22 04:38:35:17 2004
+=item - 1.0.42M3ChX  Sun Feb 22 03:12:43:33 2004
 
 * combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
     for updates to Fields or Frame)
@@ -214,8 +216,11 @@ Revision history for Perl extension Time::Fields:
 
 =item - 1.0.3CA8oiI  Wed Dec 10 08:50:44:18 2003
 
-* overloaded for stringification, implemented use methods, &&
-    cleaned up documentation
+* cleaned up documentation
+
+* implemented use methods
+
+* overloaded for stringification
 
 =item - 1.0.39GHeCl  Tue Sep 16 17:40:12:47 2003
 
@@ -245,13 +250,15 @@ or uncompress the package && run the standard:
 
 Time::Fields requires:
 
-  Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle number-base conversion
+L<Carp>                to allow errors to croak() from calling sub
+
+L<Math::BaseCnv>       to handle number-base conversion
 
 Time::Fields utilizes (if available):
 
-  Time::HiRes         to provide sub-second time precision
-  Time::Local         to provide Unix time conversion options
+L<Time::HiRes>         to provide sub-second time precision
+
+L<Time::Local>         to provide Unix time conversion options
 
 =head1 SEE ALSO
 
@@ -275,7 +282,7 @@ Pip Stuart <Pip@CPAN.Org>
 package Time::Fields;
 use strict;
 use vars qw( $AUTOLOAD );
-our $VERSION     = '1.0.41M4cZH'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.42M3ChX'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
 use overload 
@@ -370,6 +377,16 @@ my %_fielclrz = (
                 "\e[1;35m",  # Purple      frame
                 "\e[0;35m",  # DarkPurple  jink
                 "\e[0;30m"], # Grey        zone
+     '4nt'  => ["04",      # DarkRed    Century
+                "0c",      # Red        Year
+                "06",      # Orange     Month
+                "0e",      # Yellow     Day
+                "0a",      # Green       hour
+                "0b",      # Cyan        minute
+                "09",      # Blue        second
+                "0d",      # Purple      frame
+                "05",      # DarkPurple  jink
+                "07"],     # Grey        zone
 ); 
 
 # methods

@@ -20,6 +20,8 @@ if($parm =~ /(^|\s)-+h/i) {
 } else {
   if     ($parm eq '-cp') {
     print $ptim->color('zsh'); exit;
+  } elsif($parm =~ /-4(.*)$/) {
+    print $ptim->color('4NT'); exit;
   } elsif($parm =~ /-c(.*)$/) {
     $ptim = Time::PT->new('verbose' => $1) if(defined($1));
     print $ptim->color('ansi'); exit;

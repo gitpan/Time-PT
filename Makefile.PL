@@ -3,21 +3,22 @@ use ExtUtils::MakeMaker;
 # # the contents of the Makefile that is written.
 WriteMakefile(
   'NAME'         => 'Time::PT',
-  'VERSION'      => '1.0.41M4cZH',
+  'VERSION'      => '1.0.42M3ChX',
   'ABSTRACT'     => 'objects to store an instant in time',
   'AUTHOR'       => 'Pip Stuart <Pip@CPAN.Org>',
   'EXE_FILES'    => [ 
+                      'bin/pt',
                       'bin/fpt',
                       'bin/lspt',
-                      'bin/pt',
                     ],
   'PREREQ_PM'    => {
-    'Time::HiRes'                    => 0,
-    'Time::DaysInMonth'              => 0,
-    'Math::BaseCnv'                  => 0,
-    'Time::Local'                    => 0,
     'Time::Zone'                     => 0,
     'Time::DayOfWeek'                => 0,
+    'Time::Local'                    => 0,
+    'Time::DaysInMonth'              => 0,
+    'Time::HiRes'                    => 0,
+    'Math::BaseCnv'                  => 0,
+    'objs'                           => 0,
   }, # Module::Name => 1.1,
   'dist'         => { 'COMPRESS' => 'gzip', 'SUFFIX' => 'tgz' },
 );
