@@ -119,8 +119,8 @@
 
 =head1 VERSION
 
-  This documention refers to version 1.0.3CB7Vxh of 
-    Time::PT, which was released on Thu Dec 11 07:31:59:43 2003.
+  This documention refers to version 1.0.3CBIQv7 of 
+    Time::PT, which was released on Thu Dec 11 18:26:57:07 2003.
 
 =head1 SYNOPSIS
 
@@ -420,6 +420,10 @@
 
 =over 4
 
+=item - 1.0.3CBIQv7  Thu Dec 11 18:26:57:07 2003
+
+  * updated test.pl to use normal comments
+
 =item - 1.0.3CB7Vxh  Thu Dec 11 07:31:59:43 2003
 
   * added HTML color option && prepared for release
@@ -489,7 +493,7 @@ my $hirs = eval("use Time::HiRes; 1");
 if($hirs) {      use Time::HiRes; }
 my $simp = eval("use Curses::Simp; 1");
 if($simp) {      use Curses::Simp; }
-our $VERSION     = '1.0.3CB7Vxh'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.3CBIQv7'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
 our @EXPORT      = qw(pt);
