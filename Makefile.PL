@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # # the contents of the Makefile that is written.
 WriteMakefile(
   'NAME'         => 'Time::PT',
-  'VERSION_FROM' => '/home/pip/dvl/utl/pt/PT/lib/Time/PT.pm', # finds $VERSION
+  'VERSION'      => '1.0.3CQ8ibf',
   'ABSTRACT'     => 'objects to store an instant in time',
   'AUTHOR'       => 'Pip Stuart <Pip@CPAN.org>',
   'PREREQ_PM'    => {

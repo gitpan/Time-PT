@@ -119,8 +119,8 @@ Time::PT - objects to store an instant in time
 
 VERSION
 
-This documention refers to version 1.0.3CNNQHc of 
-Time::PT, which was released on Tue Dec 23 23:26:17:38 2003.
+This documentation refers to version 1.0.3CQ8ibf of 
+Time::PT, which was released on Fri Dec 26 08:44:37:41 2003.
 
 SYNOPSIS
 
@@ -442,6 +442,10 @@ me any suggestions || coding tips || notes of appreciation
 CHANGES
 
 Revision history for Perl extension Time::PT:
+
+- 1.0.3CQ8ibf  Fri Dec 26 08:44:37:41 2003
+
+* fixed typo && hardcoded path in VERSION_FROM of gen'd Makefile.PL
 
 - 1.0.3CNNQHc  Tue Dec 23 23:26:17:38 2003
 

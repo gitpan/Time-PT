@@ -119,8 +119,8 @@ Time::PT - objects to store an instant in time
 
 =head1 VERSION
 
-This documention refers to version 1.0.3CNNQHc of 
-Time::PT, which was released on Tue Dec 23 23:26:17:38 2003.
+This documentation refers to version 1.0.3CQ8ibf of 
+Time::PT, which was released on Fri Dec 26 08:44:37:41 2003.
 
 =head1 SYNOPSIS
 
@@ -449,6 +449,10 @@ Revision history for Perl extension Time::PT:
 
 =over 4
 
+=item - 1.0.3CQ8ibf  Fri Dec 26 08:44:37:41 2003
+
+* fixed typo && hardcoded path in VERSION_FROM of gen'd Makefile.PL
+
 =item - 1.0.3CNNQHc  Tue Dec 23 23:26:17:38 2003
 
 * combined Fields, Frame, && PT into one pkg
@@ -536,7 +540,7 @@ my $hirs = eval("use   Time::HiRes; 1") || 0;
 my $locl = eval("use   Time::Local; 1") || 0;
 my $zown = eval("use   Time::Zone;  1") || 0;
 #my $simp = eval("use Curses::Simp;  1") || 0;
-our $VERSION     = '1.0.3CNNQHc'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.3CQ8ibf'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
 our @EXPORT      = qw(pt);

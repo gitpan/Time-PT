@@ -33,8 +33,8 @@ Time::Fields - abstract objects to store distinct time fields
 
 =head1 VERSION
 
-This documention refers to version 1.0.3CNNQHc of 
-Time::Fields, which was released on Tue Dec 23 23:26:17:38 2003.
+This documentation refers to version 1.0.3CQ8ibf of 
+Time::Fields, which was released on Fri Dec 26 08:44:37:41 2003.
 
 =head1 SYNOPSIS
 
@@ -202,7 +202,7 @@ Revision history for Perl extension Time::Fields:
 
 =over 4
 
-=item - 1.0.3CNNQHc  Tue Dec 23 23:26:17:38 2003
+=item - 1.0.3CQ8ibf  Fri Dec 26 08:44:37:41 2003
 
 * combined Fields, Frame, && PT into one pkg
 
@@ -277,7 +277,7 @@ Pip Stuart <Pip@CPAN.org>
 package Time::Fields;
 use strict;
 use vars qw( $AUTOLOAD );
-our $VERSION     = '1.0.3CNNQHc'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.3CQ8ibf'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
 use overload 
