@@ -115,12 +115,12 @@
 
 NAME
 
-  Time::PT - objects to store an instant in time
+Time::PT - objects to store an instant in time
 
 VERSION
 
-  This documention refers to version 1.0.3CBIQv7 of 
-    Time::PT, which was released on Thu Dec 11 18:26:57:07 2003.
+  This documention refers to version 1.0.3CCA2VC of 
+    Time::PT, which was released on Fri Dec 12 10:02:31:12 2003.
 
 SYNOPSIS
 
@@ -417,6 +417,10 @@ NOTES
 CHANGES
 
   Revision history for Perl extension Time::PT:
+
+- 1.0.3CCA2VC  Fri Dec 12 10:02:31:12 2003
+
+  * removed indenting from POD NAME section
 
 - 1.0.3CBIQv7  Thu Dec 11 18:26:57:07 2003
 
