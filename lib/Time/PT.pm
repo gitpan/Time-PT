@@ -10,7 +10,7 @@
 #   be added to / subtracted from Time::Frame objects to yield 
 #   new specific PT instants.
 #     The common use of PT is for a simple `pt` utility to 
-#   en/decode dates && times using seven (7) bass64 characters.
+#   en/decode dates && times using seven (7) Base64 characters.
 #     1st: '0A1B2C3'
 #     2nd: 'Yd:2003,j:A7_,M:a3I' or 'f:3aL9.eP' 
 #     if field name ends with d, value is read as decimal nstd of default b64.
@@ -34,7 +34,7 @@
 #           or just def f as 1000 for exactly ms frames
 #     allow month/year modes to be set to avg or relative
 #
-#  My bass64 encoding uses characters: 0-9 A-Z a-z . _  since I don't like
+#  My Base64 encoding uses characters: 0-9 A-Z a-z . _  since I don't like
 #    having spaces or plusses in my time strings.  I need times to be easy to
 #    append to filenames for very precise, consice, time-stamp versioning.
 #  Each encoded character represents (normally) just a single date or time 
@@ -119,8 +119,8 @@ Time::PT - objects to store an instant in time
 
 =head1 VERSION
 
-This documentation refers to version 1.0.3CVL3V4 of 
-Time::PT, which was released on Wed Dec 31 21:03:31:04 2003.
+This documentation refers to version 1.0.418BGcv of 
+Time::PT, which was released on Thu Jan  8 11:16:38:57 2004.
 
 =head1 SYNOPSIS
 
@@ -172,8 +172,8 @@ was adapted from... I said that already =) ).
 =head1 WHY?
 
 The reason I created PT was that I have grown so enamored with
-Bass64 representations of everything around me that I was 
-compelled to write a simple clock utility ( `pt` ) using Bass64.
+Base64 representations of everything around me that I was 
+compelled to write a simple clock utility ( `pt` ) using Base64.
 This demonstrated the benefit to be gained from time objects with
 distinct fields && configurable precision.  Thus, Time::Fields
 was written to be the abstract base class for:
@@ -181,6 +181,25 @@ was written to be the abstract base class for:
   Time::Frame  ( creates objects which represent spans    of time )
       && 
   Time::PT     ( creates objects which represent instants in time )
+
+=head2 HOW?
+
+I've made up some silly sentences as mnemonic devices to help me 
+remember every 4th uppercase Base64 character:
+
+  Can      12   Noon       MonthOfYear will be less or equal to 'C'.
+  Goats    16   4 PM
+  Keep     20   8 PM
+  Oats     24   Midnight   HourOfDay   will be less than        'O'.
+  Some     28  
+  Where?   32              DayOfMonth  will be less than        'W'.
+
+  Cwelve   Cool    COW (Month Hour Day thresholds)
+  Gixteen  Guys    Girls
+  Kwenty   Keep    Keep
+  Onty4    On      On
+  Swenty8  Sayin'  Sayin'      Sippin'
+  Whirty2  Wassup  WeeDoggies  Water
 
 =head1 USAGE
 
@@ -207,7 +226,7 @@ initialize PT objects 3 different ways:
 =head2 color(<DestinationColorTypeFormat>)
 
 This is an object member
-which will join bass64 representations of each field that has
+which will join Base64 representations of each field that has
 been specified in use() && joins them with color-codes or color
 escape sequences with formats for varied uses.  Currently
 available DestinationColorTypeFormats are:
@@ -216,6 +235,29 @@ available DestinationColorTypeFormats are:
   'zsh'   # eg. %{\e[1;33m%}
   'HTML'  # eg. <a href="http://Ax9.org/pt?"><font color="#FF1B2B">
   'Simp'  # eg. RbobYbGbCbUbPb
+
+=head2 pt
+
+This function is the legacy procedural version of my command-line
+PipTime utility.  It will be removed in the near future when the
+object methods fully replace all the old behavior && have been 
+tested sufficiently.
+
+This function && the following ptcc() are the only functions
+exported when Time::PT is used.
+
+=head2 ptcc(<DestinationColorTypeFormat>)
+
+Returns the Simp color code string appropriate for pt (PipTime) data.
+
+  Format   Returned color code string
+   'k'     the background will change along with the foreground for standard
+             time-of day elements (ie. hms on a dark blue background)
+   'f'     color codes for the expanded pt format 
+             (eg. color codes corresponding to Sun Jan  4 12:41:48:13 2004)
+
+This function && the previous legacy pt() are the only functions
+exported when Time::PT is used.
 
 The following methods allow access to individual fields of 
 Time::PT objects:
@@ -449,6 +491,13 @@ Revision history for Perl extension Time::PT:
 
 =over 4
 
+=item - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
+
+* added HOW? POD section for mnemonics, created Time::Fields::_field_colors
+    (centralized base class color codes) && updated Frame && PT 
+    _color_fields, moved Curses::Simp::ptCC into Time::PT::ptcc for
+    PipTime-specific Simp Color Codes
+
 =item - 1.0.3CVL3V4  Wed Dec 31 21:03:31:04 2003
 
 * changed PREREQ to not have lib files from this pkg
@@ -498,7 +547,7 @@ or uncompress the package && run the standard:
 Time::PT requires:
 
   Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle simple number-bass conversion
+  Math::BaseCnv       to handle simple number-base conversion
   Time::DayOfWeek       also stores global day && month names
   Time::DaysInMonth   
   Time::Fields        to provide underlying object structure
@@ -544,10 +593,10 @@ my $hirs = eval("use   Time::HiRes; 1") || 0;
 my $locl = eval("use   Time::Local; 1") || 0;
 my $zown = eval("use   Time::Zone;  1") || 0;
 #my $simp = eval("use Curses::Simp;  1") || 0;
-our $VERSION     = '1.0.3CVL3V4'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.418BGcv'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
-our @EXPORT      = qw(pt);
+our @EXPORT      = qw(pt ptcc);
 use overload 
   q("")  => \&_stringify,
   q(<=>) => \&_cmp_num,
@@ -939,8 +988,8 @@ sub pt {
 #  0) Each 12 added to the Month adds  64 to the Year.
 #  1)      24 added to the Hour  adds 320 to the Year.
 #  2)      31 added to the Day   makes the year negative just before adding 2k
-      $time[1]-- if($time[1]);     # 0-bass month
-      $time[2]++ unless($time[2]); # 1-bass day
+      $time[1]-- if($time[1]);     # 0-base month
+      $time[2]++ unless($time[2]); # 1-base day
       $time[1] %= 60; # 5 month blocks go 0-59  (0-11,12-23,24-35,36-47,48-59)
       $time[2] = 1 if($time[2] > 62); # day  blocks go 1..62  (1..31, 32..62)
       $time[3] %= 48;                 # hour blocks go 0..47  (0..23, 24..47)
@@ -984,6 +1033,20 @@ sub pt {
 }
 # END legacy `pt` util code
 
+sub ptcc { # Generic PipTime Curses::Simp Color Code strings as class method
+  my $frmt = shift || 0; my $ptst;
+  if     ($frmt =~ /^-*f/i) {
+    $ptst = '!YYY OOO YY GGWCCWUUWPP RRRR';
+    #`pt pt`->Wed Jul 16 00:03:31:30 2003
+  } elsif($frmt =~ /^-*k/i) {
+    $ptst = '!ROYuX3GCUP'; # same as below but with 'hms' in blue bkgrnd
+  } else {
+    $ptst = '!ROYGCUP';    #'.bROYGCUP.';
+    # `pt`->  YMDhmsf          YMDhmsf   
+  }
+  return($ptst); 
+}
+
 # returns a PT object's expanded string form
 sub expand {
   my $self = shift; 
@@ -1009,32 +1072,14 @@ sub _color_fields {
   my $ctyp = shift || 'ANSI';
   my @clrz = (); my $coun = 0; my $rstr = '';
   if     ($ctyp =~ /^s/i) { # simp color codes
-    @clrz = ('rb',  # DarkRed    Century
-             'Rb',  # Red        Year
-             'ob',  # Orange     Month
-             'Yb',  # Yellow     Day
-             'Gb',  # Green       hour
-             'Cb',  # Cyan        minute
-             'Ub',  # Blue        second
-             'Pb',  # Purple      frame
-             'pb',  # DarkPurple  jink
-             'wb'); # Grey        zone
+    @clrz = @{$self->_field_colors('simp')};
     if(length($fstr) > 7) {
       while(length($fstr) > $coun) { $rstr .= $clrz[$coun++]; }
     } else {
       while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun++)]; }
     }
   } elsif($ctyp =~ /^h/i) { # HTML link && font color tag delimiters
-    @clrz = ("7F0B1B",  # DarkRed    Century
-             "FF1B2B",  # Red        Year
-             "FF7B2B",  # Orange     Month
-             "FFFF1B",  # Yellow     Day
-             "1BFF3B",  # Green       hour
-             "1BFFFF",  # Cyan        minute
-             "1B7BFF",  # Blue        second
-             "BB1BFF",  # Purple      frame
-             "5B0B7F",  # DarkPurple  jink
-             "7F7F7F"); # Grey        zone
+    @clrz = @{$self->_field_colors('html')};
     $_    = '<font color="#' . $_ . '">' foreach(@clrz);
     $rstr = '<a href="http://Ax9.org/pt?' . $fstr . '">';
     if(length($fstr) > 7) {
@@ -1044,16 +1089,7 @@ sub _color_fields {
     }
     $rstr .= '</a>';
   } else { # ANSI escapes
-    @clrz = ("\e[0;31m",  # DarkRed    Century
-             "\e[1;31m",  # Red        Year
-             "\e[0;33m",  # Orange     Month
-             "\e[1;33m",  # Yellow     Day
-             "\e[1;32m",  # Green       hour
-             "\e[1;36m",  # Cyan        minute
-             "\e[1;34m",  # Blue        second
-             "\e[1;35m",  # Purple      frame
-             "\e[0;35m",  # DarkPurple  jink
-             "\e[0;30m"); # Grey        zone
+    @clrz = @{$self->_field_colors('ansi')};
     if($ctyp =~ /^z/i) { # zsh prompt needs delimited %{ ANSI %}
       for(my $i=0; $i<@clrz; $i++) { $clrz[$i] = '%{' . $clrz[$i] . '%}'; }
     }
@@ -1064,13 +1100,6 @@ sub _color_fields {
     }
   }
   return($rstr);
-}
-
-sub color { # object self coloring method
-  my $self = shift; 
-  my $fstr = "$self"; 
-  my $ctyp = shift || 'ANSI';
-  return($self->_color_fields($fstr, $ctyp));
 }
 
 # Time::PT object constructor as class method or copy as object method.
@@ -1190,9 +1219,9 @@ print "hr:mn?:sc?:fr?:jn?!\n";
 #   1)      24 added to the Hour  adds 320 to the Year.
 #   2)      31 added to the Day   makes the year negative just before adding 2k
   my $mdec = 0; $mdec = 1 if($self->{'_month'}); 
-  $self->{'_month'}-- if($mdec); # 0-bass month
+  $self->{'_month'}-- if($mdec); # 0-base month
   my $dinc = 0; $dinc = 1 unless($self->{'_day'}); 
-  $self->{'_day'}++   if($dinc); # 1-bass day
+  $self->{'_day'}++   if($dinc); # 1-base day
   # 5 month blocks go 0..59  (0..11,12..23,24..35,36..47,48..59)
   $self->{'_month'} %= 60; 
   #   day   blocks go 1..62  (1..31, 32..62)
@@ -1211,8 +1240,8 @@ print "hr:mn?:sc?:fr?:jn?!\n";
   if   ($self->{'_day'}   > 31) { 
     $self->{'_year'} *=  -1; $self->{'_day'}   -= 31; 
   }
-  $self->{'_day'}--   if($dinc); # 0-bass day   again only if inc'd above
-  $self->{'_month'}++ if($mdec); # 1-bass month again only if dec'd above
+  $self->{'_day'}--   if($dinc); # 0-base day   again only if inc'd above
+  $self->{'_month'}++ if($mdec); # 1-base month again only if dec'd above
   $self->{'_year'} += 2000;
   return($self);
 }

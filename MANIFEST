@@ -2,11 +2,11 @@ lib/Time/PT.pm
 lib/Time/Frame.pm
 lib/Time/Fields.pm
 MANIFEST
-MANIFEST.SKIP
 test.pl
 bounds_test.pl
 pt
 cal.txt
 tz.txt
+MANIFEST.SKIP
 README
 Makefile.PL

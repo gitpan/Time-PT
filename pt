@@ -18,8 +18,10 @@ use Time::PT; my $parm = join(' ', @ARGV); my $ptim = Time::PT->new();
 if($parm =~ /(^|\s)-+h/i) {
   print "pt help: please run \`perldoc Time::PT\`\n";
 } else {
-  if($parm eq '-cp') {
+  if     ($parm eq '-cp') {
     print $ptim->color('zsh'); exit;
+  } elsif($parm =~ /^(e|pt)$/) {
+    print $ptim->expand(); exit;
   } elsif($parm) {
     if(@ARGV >  1) { $ptim = Time::PT->new('verbose' => $parm); }
     if(@ARGV == 1) { $ptim = Time::PT->new('str'     => $parm)->expand(); }

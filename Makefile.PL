@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # # the contents of the Makefile that is written.
 WriteMakefile(
   'NAME'         => 'Time::PT',
-  'VERSION'      => '1.0.3CVL3V4',
+  'VERSION'      => '1.0.418BGcv',
   'ABSTRACT'     => 'objects to store an instant in time',
   'AUTHOR'       => 'Pip Stuart <Pip@CPAN.org>',
   'PREREQ_PM'    => {

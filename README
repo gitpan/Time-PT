@@ -10,7 +10,7 @@
    be added to / subtracted from Time::Frame objects to yield 
    new specific PT instants.
      The common use of PT is for a simple `pt` utility to 
-   en/decode dates && times using seven (7) bass64 characters.
+   en/decode dates && times using seven (7) Base64 characters.
      1st: '0A1B2C3'
      2nd: 'Yd:2003,j:A7_,M:a3I' or 'f:3aL9.eP' 
      if field name ends with d, value is read as decimal nstd of default b64.
@@ -34,7 +34,7 @@
            or just def f as 1000 for exactly ms frames
      allow month/year modes to be set to avg or relative
 
-  My bass64 encoding uses characters: 0-9 A-Z a-z . _  since I don't like
+  My Base64 encoding uses characters: 0-9 A-Z a-z . _  since I don't like
     having spaces or plusses in my time strings.  I need times to be easy to
     append to filenames for very precise, consice, time-stamp versioning.
   Each encoded character represents (normally) just a single date or time 
@@ -119,8 +119,8 @@ Time::PT - objects to store an instant in time
 
 VERSION
 
-This documentation refers to version 1.0.3CVL3V4 of 
-Time::PT, which was released on Wed Dec 31 21:03:31:04 2003.
+This documentation refers to version 1.0.418BGcv of 
+Time::PT, which was released on Thu Jan  8 11:16:38:57 2004.
 
 SYNOPSIS
 
@@ -168,8 +168,8 @@ was adapted from... I said that already =) ).
 WHY?
 
 The reason I created PT was that I have grown so enamored with
-Bass64 representations of everything around me that I was 
-compelled to write a simple clock utility ( `pt` ) using Bass64.
+Base64 representations of everything around me that I was 
+compelled to write a simple clock utility ( `pt` ) using Base64.
 This demonstrated the benefit to be gained from time objects with
 distinct fields && configurable precision.  Thus, Time::Fields
 was written to be the abstract base class for:
@@ -177,6 +177,25 @@ was written to be the abstract base class for:
   Time::Frame  ( creates objects which represent spans    of time )
       && 
   Time::PT     ( creates objects which represent instants in time )
+
+HOW?
+
+I've made up some silly sentences as mnemonic devices to help me 
+remember every 4th uppercase Base64 character:
+
+  Can      12   Noon       MonthOfYear will be less or equal to 'C'.
+  Goats    16   4 PM
+  Keep     20   8 PM
+  Oats     24   Midnight   HourOfDay   will be less than        'O'.
+  Some     28  
+  Where?   32              DayOfMonth  will be less than        'W'.
+
+  Cwelve   Cool    COW (Month Hour Day thresholds)
+  Gixteen  Guys    Girls
+  Kwenty   Keep    Keep
+  Onty4    On      On
+  Swenty8  Sayin'  Sayin'      Sippin'
+  Whirty2  Wassup  WeeDoggies  Water
 
 USAGE
 
@@ -203,7 +222,7 @@ initialize PT objects 3 different ways:
 color(<DestinationColorTypeFormat>)
 
 This is an object member
-which will join bass64 representations of each field that has
+which will join Base64 representations of each field that has
 been specified in use() && joins them with color-codes or color
 escape sequences with formats for varied uses.  Currently
 available DestinationColorTypeFormats are:
@@ -212,6 +231,29 @@ available DestinationColorTypeFormats are:
   'zsh'   # eg. %{\e[1;33m%}
   'HTML'  # eg. <a href="http://Ax9.org/pt?"><font color="#FF1B2B">
   'Simp'  # eg. RbobYbGbCbUbPb
+
+pt
+
+This function is the legacy procedural version of my command-line
+PipTime utility.  It will be removed in the near future when the
+object methods fully replace all the old behavior && have been 
+tested sufficiently.
+
+This function && the following ptcc() are the only functions
+exported when Time::PT is used.
+
+ptcc(<DestinationColorTypeFormat>)
+
+Returns the Simp color code string appropriate for pt (PipTime) data.
+
+  Format   Returned color code string
+   'k'     the background will change along with the foreground for standard
+             time-of day elements (ie. hms on a dark blue background)
+   'f'     color codes for the expanded pt format 
+             (eg. color codes corresponding to Sun Jan  4 12:41:48:13 2004)
+
+This function && the previous legacy pt() are the only functions
+exported when Time::PT is used.
 
 The following methods allow access to individual fields of 
 Time::PT objects:
@@ -443,6 +485,13 @@ CHANGES
 
 Revision history for Perl extension Time::PT:
 
+- 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
+
+* added HOW? POD section for mnemonics, created Time::Fields::_field_colors
+    (centralized base class color codes) && updated Frame && PT 
+    _color_fields, moved Curses::Simp::ptCC into Time::PT::ptcc for
+    PipTime-specific Simp Color Codes
+
 - 1.0.3CVL3V4  Wed Dec 31 21:03:31:04 2003
 
 * changed PREREQ to not have lib files from this pkg
@@ -490,7 +539,7 @@ FILES
 Time::PT requires:
 
   Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle simple number-bass conversion
+  Math::BaseCnv       to handle simple number-base conversion
   Time::DayOfWeek       also stores global day && month names
   Time::DaysInMonth   
   Time::Fields        to provide underlying object structure

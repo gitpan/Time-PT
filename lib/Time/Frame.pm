@@ -26,7 +26,7 @@
 #           or just def f as 1000 for exactly ms frames
 #     allow month/year modes to be set to avg or relative
 #
-#  My bass64 encoding uses characters: 0-9 A-Z a-z . _  since I don't like
+#  My Base64 encoding uses characters: 0-9 A-Z a-z . _  since I don't like
 #    having spaces or plusses in my time strings.  I need times to be easy to
 #    append to filenames for very precise, consice, time-stamp versioning.
 #  Each encoded character represents (normally) just a single date or time 
@@ -45,8 +45,8 @@ Time::Frame - objects to store a length of time
 
 =head1 VERSION
 
-This documentation refers to version 1.0.3CVL3V4 of 
-Time::Frame, which was released on Wed Dec 31 21:03:31:04 2003.
+This documentation refers to version 1.0.418BGcv of 
+Time::Frame, which was released on Thu Jan  8 11:16:38:57 2004.
 
 =head1 SYNOPSIS
 
@@ -82,8 +82,8 @@ as well as the (default) smallest unit of measurement.
 =head1 WHY?
 
 The reason I created Frame was that I have grown so enamored with
-Bass64 representations of everything around me that I was 
-compelled to write a simple clock utility ( `pt` ) using Bass64.
+Base64 representations of everything around me that I was 
+compelled to write a simple clock utility ( `pt` ) using Base64.
 This demonstrated the benefit to be gained from time objects with
 distinct fields && configurable precision.  Thus, Time::Fields
 was written to be the abstract base class for:
@@ -117,7 +117,7 @@ initialize Frame objects 3 different ways:
 =head2 color(<DestinationColorTypeFormat>)
 
 This is an object member
-which will join bass64 representations of each field that has
+which will join Base64 representations of each field that has
 been specified in use() && joins them with color-codes or color
 escape sequences with formats for varied uses.  Currently
 available DestinationColorTypeFormats are:
@@ -210,9 +210,10 @@ Revision history for Perl extension Time::Frame:
 
 =over 4
 
-=item - 1.0.3CVL3V4  Wed Dec 31 21:03:31:04 2003
+=item - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
 
-* combined Fields, Frame, && PT into one pkg
+* combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
+    for updates to Fields or Frame)
 
 =item - 1.0.3CCA3bG  Fri Dec 12 10:03:37:16 2003
 
@@ -247,7 +248,7 @@ or uncompress the package && run the standard:
 Time::Frame requires:
 
   Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle number-bass conversion
+  Math::BaseCnv       to handle number-base conversion
   Time::Fields        to provide underlying object structure
 
 =head1 SEE ALSO
@@ -276,7 +277,7 @@ use base qw( Time::Fields );
 use vars qw( $AUTOLOAD );
 use Carp;
 use Math::BaseCnv qw( :all );
-our $VERSION     = '1.0.3CVL3V4'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.418BGcv'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
 use constant ONE_MINUTE          => '1 min';                  #         60;
@@ -398,32 +399,14 @@ sub _color_fields {
   my $ctyp = shift || 'Simp';
   my @clrz = (); my $coun = 0; my $rstr = '';
   if     ($ctyp =~ /^s/i) { # simp color codes
-    @clrz = ('rb',  # DarkRed    Century
-             'Rb',  # Red        Year
-             'ob',  # Orange     Month
-             'Yb',  # Yellow     Day
-             'Gb',  # Green       hour
-             'Cb',  # Cyan        minute
-             'Ub',  # Blue        second
-             'Pb',  # Purple      frame
-             'pb',  # DarkPurple  jink
-             'wb'); # Grey        zone
+    @clrz = @{$self->_field_colors('simp')};
     if(length($fstr) > 7) {
       while(length($fstr) > $coun) { $rstr .= $clrz[$coun++]; }
     } else {
       while(length($fstr) > $coun) { $rstr .= $clrz[(8 - length($fstr) + $coun++)]; }
     }
   } elsif($ctyp =~ /^h/i) { # HTML link && font color tag delimiters
-    @clrz = ("7F0B1B",  # DarkRed    Century
-             "FF1B2B",  # Red        Year
-             "FF7B2B",  # Orange     Month
-             "FFFF1B",  # Yellow     Day
-             "1BFF3B",  # Green       hour
-             "1BFFFF",  # Cyan        minute
-             "1B7BFF",  # Blue        second
-             "BB1BFF",  # Purple      frame
-             "5B0B7F",  # DarkPurple  jink
-             "7F7F7F"); # Grey        zone
+    @clrz = @{$self->_field_colors('html')};
     $_    = '<font color="#' . $_ . '">' foreach(@clrz);
     $rstr = '<a href="http://Ax9.org/pt?fr=' . $fstr . '">';
     if(length($fstr) > 7) {
@@ -433,16 +416,7 @@ sub _color_fields {
     }
     $rstr .= '</a>';
   } else { # ANSI escapes
-    @clrz = ('\e[0;31m',  # DarkRed    Century
-             '\e[1;31m',  # Red        Year
-             '\e[0;33m',  # Orange     Month
-             '\e[1;33m',  # Yellow     Day
-             '\e[1;32m',  # Green       hour
-             '\e[1;36m',  # Cyan        minute
-             '\e[1;34m',  # Blue        second
-             '\e[1;35m',  # Purple      frame
-             '\e[0;35m',  # DarkPurple  jink
-             '\e[0;30m'); # Grey        zone
+    @clrz = @{$self->_field_colors('ansi')};
     if($ctyp =~ /^z/i) { # zsh prompt needs delimited %{ ANSI %}
       for(my $i=0; $i<@clrz; $i++) { $clrz[$i] = '%{' . $clrz[$i] . '%}'; }
     }
@@ -453,13 +427,6 @@ sub _color_fields {
     }
   }
   return($rstr);
-}
-
-sub color { # object self coloring method
-  my $self = shift; 
-  my $fstr = "$self"; 
-  my $ctyp = shift || 'ANSI';
-  return($self->_color_fields($fstr, $ctyp));
 }
 
 # Time::Frame object constructor as class method or copy as object method.

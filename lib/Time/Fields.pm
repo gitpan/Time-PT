@@ -33,8 +33,8 @@ Time::Fields - abstract objects to store distinct time fields
 
 =head1 VERSION
 
-This documentation refers to version 1.0.3CVL3V4 of 
-Time::Fields, which was released on Wed Dec 31 21:03:31:04 2003.
+This documentation refers to version 1.0.418BGcv of 
+Time::Fields, which was released on Thu Jan  8 11:16:38:57 2004.
 
 =head1 SYNOPSIS
 
@@ -63,9 +63,6 @@ individual Time::Fields.
 
 =item - use_? filters should get auto-set when non-used fields get assigned
 
-=item - mv Simp, HTML, ANSI color options && code data into Fields && remove
-  redundancy from Frame && PT
-
 =item -     What else does Fields need?
 
 =back
@@ -73,8 +70,8 @@ individual Time::Fields.
 =head1 WHY?
 
 The reason I created Fields was that I have grown so enamored with
-Bass64 representations of everything around me that I was 
-compelled to write a simple clock utility ( `pt` ) using Bass64.
+Base64 representations of everything around me that I was 
+compelled to write a simple clock utility ( `pt` ) using Base64.
 This demonstrated the benefit to be gained from time objects with
 distinct fields && configurable precision.  Thus, Time::Fields
 was written to be the abstract base class for:
@@ -202,9 +199,10 @@ Revision history for Perl extension Time::Fields:
 
 =over 4
 
-=item - 1.0.3CVL3V4  Wed Dec 31 21:03:31:04 2003
+=item - 1.0.418BGcv  Thu Jan  8 11:16:38:57 2004
 
-* combined Fields, Frame, && PT into one pkg
+* combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
+    for updates to Fields or Frame)
 
 =item - 1.0.3CCA4Eh  Fri Dec 12 10:04:14:43 2003
 
@@ -248,7 +246,7 @@ or uncompress the package && run the standard:
 Time::Fields requires:
 
   Carp                to allow errors to croak() from calling sub
-  Math::BaseCnv       to handle number-bass conversion
+  Math::BaseCnv       to handle number-base conversion
 
 Time::Fields utilizes (if available):
 
@@ -277,7 +275,7 @@ Pip Stuart <Pip@CPAN.org>
 package Time::Fields;
 use strict;
 use vars qw( $AUTOLOAD );
-our $VERSION     = '1.0.3CVL3V4'; # major . minor . PipTimeStamp
+our $VERSION     = '1.0.418BGcv'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
 use overload 
@@ -340,6 +338,39 @@ push(@_attrnamz, '__use_second');  $_attrdata{$_attrnamz[-1]} = 1;
 push(@_attrnamz, '__use_frame');   $_attrdata{$_attrnamz[-1]} = 1;
 push(@_attrnamz, '__use_jink');    $_attrdata{$_attrnamz[-1]} = 0;
 push(@_attrnamz, '__use_zone');    $_attrdata{$_attrnamz[-1]} = 0;
+# global field color codes in a hash of arrays
+my %_fielclrz = (
+     'simp' => ['!r',    # DarkRed    Century
+                '!R',    # Red        Year
+                '!O',    # Orange     Month
+                '!Y',    # Yellow     Day
+                '!G',    # Green       hour
+                '!C',    # Cyan        minute
+                '!U',    # Blue        second
+                '!P',    # Purple      frame
+                '!p',    # DarkPurple  jink
+                '!w'],   # Grey        zone
+     'html' => ['7F0B1B',  # DarkRed    Century
+                'FF1B2B',  # Red        Year
+                'FF7B2B',  # Orange     Month
+                'FFFF1B',  # Yellow     Day
+                '1BFF3B',  # Green       hour
+                '1BFFFF',  # Cyan        minute
+                '1B7BFF',  # Blue        second
+                'BB1BFF',  # Purple      frame
+                '5B0B7F',  # DarkPurple  jink
+                '7F7F7F'], # Grey        zone
+     'ansi' => ["\e[0;31m",  # DarkRed    Century
+                "\e[1;31m",  # Red        Year
+                "\e[0;33m",  # Orange     Month
+                "\e[1;33m",  # Yellow     Day
+                "\e[1;32m",  # Green       hour
+                "\e[1;36m",  # Cyan        minute
+                "\e[1;34m",  # Blue        second
+                "\e[1;35m",  # Purple      frame
+                "\e[0;35m",  # DarkPurple  jink
+                "\e[0;30m"], # Grey        zone
+); 
 
 # methods
 sub _default_value   { my ($self, $attr) = @_; $_attrdata{$attr}; } # Dflt vals
@@ -390,6 +421,55 @@ sub new {
     }
   }
   return($self);
+}
+
+sub _field_colors { # return the color code array associated with a type
+  my $self = shift; my $type = shift;
+  $type = 'ansi' unless(defined($type) && exists($_fielclrz{lc($type)}));
+  return($_fielclrz{ lc($type) });
+}
+
+sub _color_fields { # return a color string for a Fields object
+  my $self = shift;
+  my $fstr = shift || ' ' x 10; $fstr =~ s/0+$// if(length($fstr) <= 7);
+  my $ctyp = shift || 'ansi';
+  my @clrz = (); my $coun = 0; my $rstr = '';
+  if     ($ctyp =~ /^s/i) { # simp color codes
+    @clrz = @{$self->_field_colors('simp')};
+    if(length($fstr) > 7) {
+      while(length($fstr) > $coun) { $rstr .= $clrz[$coun++]; }
+    } else {
+      while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun++)]; }
+    }
+  } elsif($ctyp =~ /^h/i) { # HTML link && font color tag delimiters
+    @clrz = @{$self->_field_colors('html')};
+    $_    = '<font color="#' . $_ . '">' foreach(@clrz);
+    $rstr = '<a href="http://Ax9.org/pt?' . $fstr . '">';
+    if(length($fstr) > 7) {
+      while(length($fstr) > $coun) { $rstr .= $clrz[$coun] . substr($fstr, $coun++, 1) . '</font>'; }
+    } else {
+      while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun)] . substr($fstr, $coun++, 1) . '</font>'; }
+    }
+    $rstr .= '</a>';
+  } else { # ANSI escapes
+    @clrz = @{$self->_field_colors('ansi')};
+    if($ctyp =~ /^z/i) { # zsh prompt needs delimited %{ ANSI %}
+      for(my $i=0; $i<@clrz; $i++) { $clrz[$i] = '%{' . $clrz[$i] . '%}'; }
+    }
+    if(length($fstr) > 7) {
+      while(length($fstr) > $coun) { $rstr .= $clrz[$coun] . substr($fstr, $coun++, 1); }
+    } else {
+      while(length($fstr) > $coun) { $rstr .= $clrz[(1 + $coun)] . substr($fstr, $coun++, 1); }
+    }
+  }
+  return($rstr);
+}
+
+sub color { # generic self color method to call overloaded subclass colorfields
+  my $self = shift; 
+  my $fstr = "$self"; 
+  my $ctyp = shift || 'ansi';
+  return($self->_color_fields($fstr, $ctyp));
 }
 
 sub AUTOLOAD { # methods (created as necessary)
