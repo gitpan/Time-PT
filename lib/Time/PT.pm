@@ -119,281 +119,309 @@ Time::PT - objects to store an instant in time
 
 =head1 VERSION
 
-  This documention refers to version 1.0.3CCA2VC of 
-    Time::PT, which was released on Fri Dec 12 10:02:31:12 2003.
+This documention refers to version 1.0.3CNNQHc of 
+Time::PT, which was released on Tue Dec 23 23:26:17:38 2003.
 
 =head1 SYNOPSIS
 
-    use Time::PT;
-    
-    my $f = Time::PT->new();
-    print 'The Day-of-the-Week today is: ', $f->dow(), "\n";
+  use Time::PT;
+  
+  my $f = Time::PT->new();
 
-    print 'PipTime is ', pt, "\n";
+  print "PipTime is: $f\n";
+  print 'The Day-of-Week today is: ', $f->dow(), "\n";
 
 =head1 DESCRIPTION
 
-  This module has been adapted from the Time::Piece module 
-    written by Matt Sergeant <matt@sergeant.org> && Jarkko 
-    Hietaniemi <jhi@iki.fi>.  Time::PT inherits base 
-    data structure && object methods from Time::Fields.  
-    PT was written to simplify storage && calculation 
-    of encoded, yet distinct && human-readable, time data 
-    objects.
-  This module (Time::PT) does not replace the standard localtime &&
-    gmtime functions like Time::Piece but Time::PT objects behave
-    almost identically to Time::Piece objects otherwise (since it
-    was adapted from... I said that already =) ).
+This module has been adapted from the Time::Piece module 
+written by Matt Sergeant <matt@sergeant.org> && Jarkko 
+Hietaniemi <jhi@iki.fi>.  Time::PT inherits base 
+data structure && object methods from Time::Fields.  
+PT was written to simplify storage && calculation 
+of encoded, yet distinct && human-readable, time data 
+objects.
+
+This module (Time::PT) does not replace the standard localtime &&
+gmtime functions like Time::Piece but Time::PT objects behave
+almost identically to Time::Piece objects otherwise (since it
+was adapted from... I said that already =) ).
 
 =head1 2DO
 
-  mk interoperable w/ Time::Seconds objects
-  add Time::Zone stuff to use && match zone field reasonably
-  flesh out constructor init data parsing && formats supported
-  consider epoch functions like _epoch([which epoch]) or individuals
-    like _jinx_epoch()
-  mk PT->new able to create from different 'epoch' init types
-  fix weird 0 month && 0 day problems
-  replace legacy pt() with new() wrapper
-        What else does PT need?
+=over 2
+
+=item - mk interoperable w/ Time::Seconds objects
+
+=item - add Time::Zone stuff to use && match zone field reasonably
+
+=item - flesh out constructor init data parsing && formats supported
+
+=item - consider epoch functions like _epoch([which epoch]) or individuals
+          like _jinx_epoch()
+
+=item - mk PT->new able to create from different 'epoch' init types
+
+=item - fix weird 0 month && 0 day problems
+
+=item - replace legacy pt() with new() wrapper
+
+=item -     What else does PT need?
+
+=back
 
 =head1 WHY?
 
-  The reason I created PT was that I have grown so enamored with
-    Bass64 representations of everything around me that I was 
-    compelled to write a simple clock utility ( `pt` ) using Bass64.
-    This demonstrated the benefit to be gained from time objects with
-    distinct fields && configurable precision.  Thus, Time::Fields
-    was written to be the abstract base class for:
-      Time::Frame  ( creates objects which represent spans    of time )
-          && 
-      Time::PT     ( creates objects which represent instants in time )
+The reason I created PT was that I have grown so enamored with
+Bass64 representations of everything around me that I was 
+compelled to write a simple clock utility ( `pt` ) using Bass64.
+This demonstrated the benefit to be gained from time objects with
+distinct fields && configurable precision.  Thus, Time::Fields
+was written to be the abstract base class for:
+
+  Time::Frame  ( creates objects which represent spans    of time )
+      && 
+  Time::PT     ( creates objects which represent instants in time )
 
 =head1 USAGE
 
-  Many of Time::PT's methods have been patterned after the excellent
-    Time::Piece module written by Matt Sergeant <matt@sergeant.org>
-    && Jarkko Hietaniemi <jhi@iki.fi>.
+Many of Time::PT's methods have been patterned after the excellent
+Time::Piece module written by Matt Sergeant <matt@sergeant.org>
+&& Jarkko Hietaniemi <jhi@iki.fi>.
 
-  new(<InitType>, <InitData>) - Time::PT's constructor can be called
-    as a class method to create a brand new object or as an object 
-    method to copy an existing object.  Beyond that, new() can 
-    initialize PT objects 3 different ways:
-     -1) <packedB64InitStringImplies'str'>
-        eg. Time::PT->new('3C79jo0');
-      0) 'str'  => <packedB64InitString>
-        eg. Time::PT->new('str'  => '0A1B2C3D4E');
-      1) 'list' => <arrayRef>
-        eg. Time::PT->new('list' => [0, 1, 2..9]);
-      2) 'hash' => <hashRef>
-        eg. Time::PT->new('hash' => {'jink' => 8, 'year' => 2003})
+=head2 new(<InitType>, <InitData>)
 
-  color(<DestinationColorTypeFormat>) - This is an object member
-    which will join bass64 representations of each field that has
-    been specified in use() && joins them with color-codes or color
-    escape sequences with formats for varied uses.  Currently
-    available DestinationColorTypeFormats are:
-      'ANSI'  # eg. \e[1;32m
-      'zsh'   # eg. %{\e[1;33m%}
-      'HTML'  # eg. <a href="http://Ax9.org/pt?"><font color="#FF1B2B">
-      'Simp'  # eg. RbobYbGbCbUbPb
+Time::PT's constructor can be called
+as a class method to create a brand new object or as an object 
+method to copy an existing object.  Beyond that, new() can 
+initialize PT objects 3 different ways:
 
-  The following methods allow access to individual fields of 
-    Time::PT objects:
+ -1) <packedB64InitStringImplies'str'>
+    eg. Time::PT->new('3C79jo0');
+  0) 'str'  => <packedB64InitString>
+    eg. Time::PT->new('str'  => '0A1B2C3D4E');
+  1) 'list' => <arrayRef>
+    eg. Time::PT->new('list' => [0, 1, 2..9]);
+  2) 'hash' => <hashRef>
+    eg. Time::PT->new('hash' => {'jink' => 8, 'year' => 2003})
 
-    $t->C  or  $t->century
-    $t->Y  or  $t->year
-    $t->M  or  $t->month
-    $t->D  or  $t->day
-    $t->h  or  $t->hour
-    $t->m  or  $t->minute
-    $t->s  or  $t->second
-    $t->f  or  $t->frame
-    $t->j  or  $t->jink
-    $t->z  or  $t->zone
+=head2 color(<DestinationColorTypeFormat>)
 
-  Any combination of above single letters can be used as well.  
-    Following are some common useful examples:
-  
-    $t->hms                 # returns list of fields eg. [12, 34, 56]
-    $t->hms(12, 56, 34)     # sets fields: h = 12, m = 56, s = 34
-    $t->hmsf                # [12, 34, 56, 12]
-    $t->hmsfj               # [12, 34, 56, 12, 34]
-    $t->hmsfjz              # [12, 34, 56, 12, 34, 16]
-    $t->time                # same as $t->hms
-    $t->alltime             # same as $t->hmsfjz
-    $t->YMD                 # [2000,  2,   29]
-    $t->MDY                 # [   2, 29, 2000]
-    $t->DMY                 # [  29,  2, 2000]
-    $t->CYMD                # [  20,  0,    2, 29]
-    $t->date                # same as $t->YMD
-    $t->alldate             # same as $t->CYMD
-    $t->CYMDhmsfjz          # [  20,  0,    2, 29, 12, 13, 56, 12, 13, 16]
-    $t->pt7                 # same as $t->YMDhmsf
-    $t->all                 # same as $t->CYMDhmsfjz
-    $t->dt                  # same as $t->CYMDhmsfjz
-    "$t"                    # same as $t->CYMDhmsfjz except only prints
-                            #   fields which are "used" which by default
-                            #   is the same as the $t->YMDhmsf of pt7()
+This is an object member
+which will join bass64 representations of each field that has
+been specified in use() && joins them with color-codes or color
+escape sequences with formats for varied uses.  Currently
+available DestinationColorTypeFormats are:
 
-  Method names can be in any case with the following exceptions.  
-    Special handling exists to resolve ambiguity between the Month && 
-    minute fields.  If a lowercase 'm' is used adjacent to a 'y' or 'd'
-    of either case, it is interpreted as Month.  Otherwise, the case of 
-    the 'm' distinguishes Month from minute.  An uppercase 'M' is ALWAYS
-    Month.  An adjacent uppercase 'H' or 'S' will not turn an uppercase
-    'M' into minute.  Method names which need to specify Month or minute
-    fields can also optionally specify the distinguishing vowel 
-    ('o' or 'i') instead of 'M' or 'm'.
+  'ANSI'  # eg. \e[1;32m
+  'zsh'   # eg. %{\e[1;33m%}
+  'HTML'  # eg. <a href="http://Ax9.org/pt?"><font color="#FF1B2B">
+  'Simp'  # eg. RbobYbGbCbUbPb
 
-    $t->ymd                 # same as $t->YMD
-    $t->dmy                 # same as $t->DMY
-    $t->MmMm                # Month minute Month minute
-    $t->HMS                 # hour Month second! NOT same as $t->hms 
-    $t->yod                 # same as $t->YMD
-    $t->chmod               # Century hour minute Month Day
-    $t->FooIsMyJoy          # frame Month Month minute second Month Year
-                            #   jink Month Year
+The following methods allow access to individual fields of 
+Time::PT objects:
 
-  After importing this module, when you use localtime or gmtime in a
-    scalar context, you DO NOT get a special Time::PT object like you
-    would when using Time::Piece.  This module relies on a new() 
-    constructor instead.  The following methods are available on 
-    Time::PT objects though && remain as similar to Time::Piece
-    functionality as makes sense.
+  $t->C  or  $t->century
+  $t->Y  or  $t->year
+  $t->M  or  $t->month
+  $t->D  or  $t->day
+  $t->h  or  $t->hour
+  $t->m  or  $t->minute
+  $t->s  or  $t->second
+  $t->f  or  $t->frame
+  $t->j  or  $t->jink
+  $t->z  or  $t->zone
 
-    $t->frm                 # also as $t->frame && $t->subsecond
-    $t->sec                 # also available as $t->second
-    $t->min                 # also available as $t->minute
-    $t->hour                # 24 hour
-    $t->mday                # also available as $t->day_of_month
-    $t->mon                 # 1 = January
-    $t->_mon                # 0 = January
-    $t->monname             # Feb
-    $t->month               # same as $t->mon
-      *NOTE* The above definition is different from the Time::Piece 
-        interface which defines month() the same as monname() instead
-        of mon().
-    $t->fullmonth           # February
-    $t->year                # based at 0 (year 0 AD is, of course 1 BC)
-    $t->_year               # year minus 1900
-    $t->yy                  # 2 digit year
-    $t->wday                # 1 = Sunday
-    $t->_wday               # 0 = Sunday
-    $t->day_of_week         # 0 = Sunday
-    $t->wdayname            # Tue
-    $t->day                 # same as mday
-      *NOTE* The above definition is different from the Time::Piece 
-        interface which defines day() the same as wdayname() instead
-        of mday().  I'd rather have just day() be of-the-month.
-    $t->fullday             # Tuesday
-    $t->yday                # also available as $t->day_of_year, 0 = Jan 01
-    $t->isdst               # also available as $t->daylight_savings
+Any combination of above single letters can be used as well.  
+Following are some common useful examples:
 
-      The following functions return a list of the named fields.  The
-        return value can be joined with any desirable delimiter like:
-            join(':', $t->hms)
-        but the functions also can take a list of parameters to update
-        the corresponding named fields like:
-            $t->YMD( 2003, 12, 8 )
-        would assign a new date of December 8th, 2003 to $t.
-    $t->hms                 # [12, 34, 56]
-    $t->hmsf                # [12, 34, 56, 12]
-    $t->time                # same as $t->hmsf
+  $t->hms                 # returns list of fields eg. [12, 34, 56]
+  $t->hms(12, 56, 34)     # sets fields: h = 12, m = 56, s = 34
+  $t->hmsf                # [12, 34, 56, 12]
+  $t->hmsfj               # [12, 34, 56, 12, 34]
+  $t->hmsfjz              # [12, 34, 56, 12, 34, 16]
+  $t->time                # same as $t->hms
+  $t->alltime             # same as $t->hmsfjz
+  $t->YMD                 # [2000,  2,   29]
+  $t->MDY                 # [   2, 29, 2000]
+  $t->DMY                 # [  29,  2, 2000]
+  $t->CYMD                # [  20,  0,    2, 29]
+  $t->date                # same as $t->YMD
+  $t->alldate             # same as $t->CYMD
+  $t->CYMDhmsfjz          # [  20,  0,    2, 29, 12, 13, 56, 12, 13, 16]
+  $t->pt7                 # same as $t->YMDhmsf
+  $t->all                 # same as $t->CYMDhmsfjz
+  $t->dt                  # same as $t->CYMDhmsfjz
+  "$t"                    # same as $t->CYMDhmsfjz except only prints
+                          #   fields which are "used" which by default
+                          #   is the same as the $t->YMDhmsf of pt7()
 
-    $t->ymd                 # [2000,  2, 29]
-    $t->date                # same as $t->ymd
-    $t->mdy                 # [ 2, 29, 2000]
-    $t->dmy                 # [29,  2, 2000]
-    $t->datetime            # 2000-02-29T12:34:56            (ISO 8601)
-    $t->expand              # Tue Feb 29 12:34:56:12 2000
-    $t->cdate               # same as $t->expand
-    $t->compress            # 02TCYuC
-    "$t"                    # same as $t->compress
+Method names can be in any case with the following exceptions.  
+Special handling exists to resolve ambiguity between the Month && 
+minute fields.  If a lowercase 'm' is used adjacent to a 'y' or 'd'
+of either case, it is interpreted as Month.  Otherwise, the case of 
+the 'm' distinguishes Month from minute.  An uppercase 'M' is ALWAYS
+Month.  An adjacent uppercase 'H' or 'S' will not turn an uppercase
+'M' into minute.  Method names which need to specify Month or minute
+fields can also optionally specify the distinguishing vowel 
+('o' or 'i') instead of 'M' or 'm'.
 
-    $t->is_leap_year        # true if it is
-    $t->month_last_day      # 28-31
+  $t->ymd                 # same as $t->YMD
+  $t->dmy                 # same as $t->DMY
+  $t->MmMm                # Month minute Month minute
+  $t->HMS                 # hour Month second! NOT same as $t->hms 
+  $t->yod                 # same as $t->YMD
+  $t->chmod               # Century hour minute Month Day
+  $t->FooIsMyJoy          # frame Month Month minute second Month Year
+                          #   jink Month Year
 
-    $t->time_separator($s)  # set the default separator (default ":")
-    $t->date_separator($s)  # set the default separator (default "-")
-    $t->day_list(@days)     # set the default weekdays
-    $t->mon_list(@days)     # set the default months
+After importing this module, when you use localtime or gmtime in a
+scalar context, you DO NOT get a special Time::PT object like you
+would when using Time::Piece.  This module relies on a new() 
+constructor instead.  The following methods are available on 
+Time::PT objects though && remain as similar to Time::Piece
+functionality as makes sense.
+
+  $t->frm                 # also as $t->frame && $t->subsecond
+  $t->sec                 # also available as $t->second
+  $t->min                 # also available as $t->minute
+  $t->hour                # 24 hour
+  $t->mday                # also available as $t->day_of_month
+  $t->mon                 # 1 = January
+  $t->_mon                # 0 = January
+  $t->monname             # Feb
+  $t->month               # same as $t->mon
+                 # *NOTE* The above definition ( of $t->month() ) is 
+                 # different from the Time::Piece interface which defines
+                 # month() the same as monname() instead of mon().
+  $t->fullmonth           # February
+  $t->year                # based at 0 (year 0 AD is, of course 1 BC)
+  $t->_year               # year minus 1900
+  $t->yy                  # 2 digit year
+  $t->wday                # 1 = Sunday
+  $t->_wday               # 0 = Sunday
+  $t->day_of_week         # 0 = Sunday
+  $t->wdayname            # Tue
+  $t->day                 # same as mday
+                 # *NOTE* Similar to month(), I've defined day() 
+                 # differently from Time::Piece which makes it the same
+                 # as wdayname() instead of mday().
+  $t->fullday             # Tuesday
+  $t->yday                # also available as $t->day_of_year, 0 = Jan 01
+  $t->isdst               # also available as $t->daylight_savings
+
+The following functions return a list of the named fields.  The
+return value can be joined with any desirable delimiter like:
+
+  join(':', $t->hms);
+  join($t->time_separator, $t->hms);
+
+but the functions also can take a list of parameters to update
+the corresponding named fields like:
+
+  $t->YMD( 2003, 12, 8 ) # assigns new date of December 8th, 2003 to $t
+
+Following are some useful functions && comments of sample return values:
+
+  $t->hms                 # [12, 34, 56]
+  $t->hmsf                # [12, 34, 56, 12]
+  $t->time                # same as $t->hmsf
+
+  $t->ymd                 # [2000,  2, 29]
+  $t->date                # same as $t->ymd
+  $t->mdy                 # [ 2, 29, 2000]
+  $t->dmy                 # [29,  2, 2000]
+  $t->datetime            # 2000-02-29T12:34:56            (ISO 8601)
+  $t->expand              # Tue Feb 29 12:34:56:12 2000
+  $t->cdate               # same as $t->expand
+  $t->compress            # 02TCYuC
+  "$t"                    # same as $t->compress
+
+  $t->is_leap_year        # true if it is
+  $t->month_last_day      # 28-31
+
+  $t->time_separator($s)  # set the default separator (default ":")
+  $t->date_separator($s)  # set the default separator (default "-")
+  $t->day_list(@days)     # set the default weekdays
+  $t->mon_list(@days)     # set the default months
 
 =head2 Local Locales
 
-  Both wdayname() && monname() can accept the same list parameter 
-    as day_list() && mon_list() respectively for temporary help with
-    simple localization.
+Both wdayname() && monname() can accept the same list parameter 
+as day_list() && mon_list() respectively for temporary help with
+simple localization.
 
-    my @days = ( 'Yom Rishone', 'Yom Shayni', 'Yom Shlishi', 'Yom Revi\'i', 
-                 'Yom Khahmishi', 'Yom Hashishi', 'Shabbat' );
+  my @days = ( 'Yom Rishone', 'Yom Shayni', 'Yom Shlishi', 'Yom Revi\'i', 
+               'Yom Khahmishi', 'Yom Hashishi', 'Shabbat' );
 
-    my $hebrew_day = pt->wdayname(@days);
-                   # pt->monname() can be used similarly
+  my $hebrew_day = pt->wdayname(@days);
+                 # pt->monname() can be used similarly
 
-  To update the global lists, use:
+To update the global lists, use:
 
-    Time::PT::day_list(@days);
-      &&
-    Time::PT::mon_list(@months);
+  Time::PT::day_list(@days);
+    &&
+  Time::PT::mon_list(@months);
 
 =head2 Calculations
 
-  PT object strings (both in normal initialization && printing) grow
-    left-to-right starting from the Year to specify whatever precision
-    you need while Frame objects grow right-to-left from the frame field.
+PT object strings (both in normal initialization && printing) grow
+left-to-right starting from the Year to specify whatever precision
+you need while Frame objects grow right-to-left from the frame field.
 
-  It's possible to use simple addition and subtraction of objects:
+It's possible to use simple addition and subtraction of objects:
 
-    use Time::Frame;
-    
-    my $cur_pt       = Time::PT->new();# Dhmsf
-    my $one_week     = Time::Frame->new('70000');
-    my $one_week_ago = $cur_pt - $one_week;
+  use Time::Frame;
+  
+  my $cur_pt       = Time::PT->new();# Dhmsf
+  my $one_week     = Time::Frame->new('70000');
+  my $one_week_ago = $cur_pt - $one_week;
 
-  If a calculation is done with a raw string parameter instead of an
-    instantiated object, the most likely appropriate object 
-    constructor is called on it.  These init strings must adhere to
-    the implied 'str' format for auto-creating objects;  I aim to
-    support a much wider array of operations && to interoperate with 
-    Time::Piece && Time::Seconds someday but not yet.
+If a calculation is done with a raw string parameter instead of an
+instantiated object, the most likely appropriate object 
+constructor is called on it.  These init strings must adhere to
+the implied 'str' format for auto-creating objects;  I aim to
+support a much wider array of operations && to interoperate with 
+Time::Piece && Time::Seconds someday but not yet.
 
-    my $cur_pt             = Time::PT->new();# Dhmsf
-    my $half_hour_from_now = $cur_pt + 'U00';
+  my $cur_pt             = Time::PT->new();# Dhmsf
+  my $half_hour_from_now = $cur_pt + 'U00';
 
-  The following are valid (where $t0 and $t1 are Time::PT objects
-    && $f is a Time::Frame object):
+The following are valid (where $t0 and $t1 are Time::PT objects
+&& $f is a Time::Frame object):
 
-    $t0 - $t1;  # returns Time::Frame object
-    $t0 - '63'; # returns Time::PT object
-    $t0 + $f;   # returns Time::PT object
+  $t0 - $t1;  # returns Time::Frame object
+  $t0 - '63'; # returns Time::PT object
+  $t0 + $f;   # returns Time::PT object
 
 =head2 Comparisons
 
-  All normal numerical && string comparisons should work reasonably on
-    Time::PT objects: "<",  ">",  "<=", ">=", "<=>", "==" &&  "!="
-                     "lt", "gt", "le", "ge", "cmp", "eq" and "ne"
+All normal numerical && string comparisons should work reasonably on
+Time::PT objects: 
+
+  "<",  ">",  "<=", ">=", "<=>", "==" &&  "!="
+  "lt", "gt", "le", "ge", "cmp", "eq" and "ne"
 
 =head2 YYYY-MM-DDThh:mm:ss
 
-  The ISO 8601 standard defines the date format to be YYYY-MM-DD, and
-    the time format to be hh:mm:ss (24 hour clock), and if combined,
-    they should be concatenated with date first and with a capital 'T'
-    in front of the time.
+The ISO 8601 standard defines the date format to be YYYY-MM-DD, and
+the time format to be hh:mm:ss (24 hour clock), and if combined,
+they should be concatenated with date first and with a capital 'T'
+in front of the time.
 
 =head2 Week Number
 
-  The ISO 8601 standard specifies that weeks begin on Monday and the first
-    week of the year is the one that includes both January 4th and the
-    first Thursday of the year.  In other words, if the first Monday of
-    January is the 2nd, 3rd, or 4th, the preceding days are part of the 
-    final week of the prior year.  Week numbers range from 1 to 53.
+The ISO 8601 standard specifies that weeks begin on Monday and the first
+week of the year is the one that includes both January 4th and the
+first Thursday of the year.  In other words, if the first Monday of
+January is the 2nd, 3rd, or 4th, the preceding days are part of the 
+final week of the prior year.  Week numbers range from 1 to 53.
 
 =head1 NOTES
 
-  Whenever individual Time::PT attributes are going to be 
-    printed or an entire object can be printed with multi-colors,
-    the following mapping should be employed whenever possible:
+Whenever individual Time::PT attributes are going to be 
+printed or an entire object can be printed with multi-colors,
+the following mapping should be employed whenever possible:
+
            D      Century -> DarkRed
            A      Year    -> Red
            T      Month   -> Orange
@@ -404,101 +432,111 @@ Time::PT - objects to store an instant in time
             m      frame  -> Purple
             e      jink   -> DarkPurple
                    zone   -> Grey or White
-  Please see the color() member function in the USAGE section.
 
-  There's some weird behavior for PipTimes created with a zero month
-    or day field since both are 1-based.  I aim to fix all these bugs
-    but be warned that this issue may be causing math errors for a bit.
+Please see the color() member function in the USAGE section.
 
-  I hope you find Time::PT useful.  Please feel free to e-mail
-    me any suggestions || coding tips || notes of appreciation 
-    ("app-ree-see-ay-shun").  Thank you.  TTFN.
+There's some weird behavior for PipTimes created with a zero month
+or day field since both are 1-based.  I aim to fix all these bugs
+but be warned that this issue may be causing math errors for a bit.
+
+I hope you find Time::PT useful.  Please feel free to e-mail
+me any suggestions || coding tips || notes of appreciation 
+("app-ree-see-ay-shun").  Thank you.  TTFN.
 
 =head1 CHANGES
 
-  Revision history for Perl extension Time::PT:
+Revision history for Perl extension Time::PT:
 
 =over 4
 
+=item - 1.0.3CNNQHc  Tue Dec 23 23:26:17:38 2003
+
+* combined Fields, Frame, && PT into one pkg
+
 =item - 1.0.3CCA2VC  Fri Dec 12 10:02:31:12 2003
 
-  * removed indenting from POD NAME section
+* removed indenting from POD NAME section
 
 =item - 1.0.3CBIQv7  Thu Dec 11 18:26:57:07 2003
 
-  * updated test.pl to use normal comments
+* updated test.pl to use normal comments
 
 =item - 1.0.3CB7Vxh  Thu Dec 11 07:31:59:43 2003
 
-  * added HTML color option && prepared for release
+* added HTML color option && prepared for release
 
 =item - 1.0.3CA8ipi  Wed Dec 10 08:44:51:44 2003
 
-  * built class to inherit from Time::Fields && mimic Time::Piece
+* built class to inherit from Time::Fields && mimic Time::Piece
 
 =item - 1.0.37VG26k  Thu Jul 31 16:02:06:46 2003
 
-  * original version
+* original version
 
 =back
 
 =head1 INSTALL
 
-  Please run:
-        `perl -MCPAN -e "install Time::PT"`
-    or uncompress the package && run the standard:
-        `perl Makefile.PL; make; make test; make install`
+Please run:
+
+    `perl -MCPAN -e "install Time::PT"`
+
+or uncompress the package && run the standard:
+
+    `perl Makefile.PL; make; make test; make install`
 
 =head1 FILES
 
-  Time::PT requires:
-    Carp                to allow errors to croak() from calling sub
-    Math::BaseCnv       to handle simple number-bass conversion
-    Time::DayOfWeek       also stores global day && month names
-    Time::DaysInMonth   
-    Time::HiRes         to provide subsecond time precision
-    Time::Local         to turn epoch seconds back into a real date
-#    Time::Zone;         not utilized yet
-    Time::Fields        to provide underlying object structure
-    Time::Frame         to represent spans of time
+Time::PT requires:
+
+  Carp                to allow errors to croak() from calling sub
+  Math::BaseCnv       to handle simple number-bass conversion
+  Time::DayOfWeek       also stores global day && month names
+  Time::DaysInMonth   
+  Time::Fields        to provide underlying object structure
+  Time::Frame         to represent spans of time
+
+Time::PT uses (if available):
+
+  Time::HiRes         to provide subsecond time precision
+  Time::Local         to turn epoch seconds back into a real date
+  Time::Zone           not utilized yet
 
 =head1 SEE ALSO
 
-  Time::Frame
+Time::Frame
 
 =head1 LICENSE
 
-  Most source code should be Free!
-    Code I have lawful authority over is && shall be!
-  Copyright: (c) 2003, Pip Stuart.  All rights reserved.
-  Copyleft :  I license this software under the GNU General Public
-    License (version 2).  Please consult the Free Software Foundation
-    (http://www.fsf.org) for important information about your freedom.
+Most source code should be Free!
+  Code I have lawful authority over is && shall be!
+Copyright: (c) 2003, Pip Stuart.  All rights reserved.
+Copyleft :  I license this software under the GNU General Public
+  License (version 2).  Please consult the Free Software Foundation
+  (http://www.fsf.org) for important information about your freedom.
 
 =head1 AUTHOR
 
-  Pip Stuart <Pip@CPAN.org>
+Pip Stuart <Pip@CPAN.org>
 
 =cut
 
 package Time::PT;
-require Time::Fields;
-require Exporter;
 use strict;
-use vars qw( $AUTOLOAD );
+require      Time::Fields;
+require                   Exporter;
 use base qw( Time::Fields Exporter );
+use vars qw( $AUTOLOAD );
 use Carp;
 use Math::BaseCnv qw( :all );
 use Time::DayOfWeek;
 use Time::DaysInMonth;
-#use Time::Zone;
-use Time::Local;
 use Time::Frame;
-my $hirs = eval("use Time::HiRes; 1");
-if($hirs) {      use Time::HiRes; }
-my $simp = eval("use Curses::Simp; 1");
-if($simp) {      use Curses::Simp; }
-our $VERSION     = '1.0.3CCA2VC'; # major . minor . PipTimeStamp
+my $hirs = eval("use   Time::HiRes; 1") || 0;
+my $locl = eval("use   Time::Local; 1") || 0;
+my $zown = eval("use   Time::Zone;  1") || 0;
+#my $simp = eval("use Curses::Simp;  1") || 0;
+our $VERSION     = '1.0.3CNNQHc'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
 # See http://Ax9.org/pt?$PTVR && `perldoc Time::PT`
 our @EXPORT      = qw(pt);
@@ -967,11 +1005,11 @@ sub _color_fields {
              'Rb',  # Red        Year
              'ob',  # Orange     Month
              'Yb',  # Yellow     Day
-             'Gb',  # Green       Hour
-             'Cb',  # Cyan        Minute
-             'Ub',  # Blue        Second
-             'Pb',  # Purple      Frame
-             'pb',  # DarkPurple  Jink
+             'Gb',  # Green       hour
+             'Cb',  # Cyan        minute
+             'Ub',  # Blue        second
+             'Pb',  # Purple      frame
+             'pb',  # DarkPurple  jink
              'wb'); # Grey        zone
     if(length($fstr) > 7) {
       while(length($fstr) > $coun) { $rstr .= $clrz[$coun++]; }
@@ -1081,6 +1119,7 @@ sub new {
          $self->{'_frame'} , 
          $self->{'_jink'}  ) = split(/\D+/, $5);
         $self->{'_year'}     = $8;
+#print "M:$mont D:$self->{'_day'} h:($self->{'_hour'} m:$self->{'_minute'} s:$self->{'_second'} f:$self->{'_frame'} j:($self->{'_jink'} Y:$self->{'_year'}\n";
       } else {
         $rgxs = '^\\s*((' . join('|', @dayo) . ')\\S*)?\\s*(' . 
                             join('|', @mnth) . ')\\S*\\s*(' .

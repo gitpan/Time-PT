@@ -1,4 +1,6 @@
-PT.pm
+lib/Time/PT.pm
+lib/Time/Frame.pm
+lib/Time/Fields.pm
 MANIFEST
 MANIFEST.SKIP
 test.pl

@@ -13,6 +13,16 @@
 #   Copyleft :  I license this software under the GNU General Public
 #     License (version 2).  Please consult the Free Software Foundation
 #     (http://www.fsf.org) for important information about your freedom.
-use strict; use Time::PT; my $parm = join(' ', @ARGV);
-($parm =~ /(^|\s)-+h/i) ? system("perldoc Time::PT")
-                        : print  pt($parm);
+use strict; 
+use Time::PT; my $parm = join(' ', @ARGV); my $ptim = Time::PT->new();
+if($parm =~ /(^|\s)-+h/i) {
+  print "pt help: please run \`perldoc Time::PT\`\n";
+} else {
+  if($parm eq '-cp') {
+    print $ptim->color('zsh'); exit;
+  } elsif($parm) {
+    if(@ARGV >  1) { $ptim = Time::PT->new('verbose' => $parm); }
+    if(@ARGV == 1) { $ptim = Time::PT->new('str'     => $parm)->expand(); }
+  }
+  print $ptim;
+}
