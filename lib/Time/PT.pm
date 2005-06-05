@@ -71,7 +71,7 @@
 #             25-36   448-  511  2448-2511
 #             37-48   512-  575  2512-2575
 #             49-60   576-  639  2576-2639
-# Notz:  
+# Notz:
 #  PT + Frame can become the core of a new input language which accounts
 #    for time.  It could be game sequences like a fireball that can be rolled
 #    from d->df && df->f only at a certain speed ... but then also later
@@ -119,19 +119,23 @@ Time::PT - objects to store an instant in time
 
 =head1 VERSION
 
-This documentation refers to version 1.0.42M3ChX of 
-Time::PT, which was released on Sun Feb 22 03:12:43:33 2004.
+This documentation refers to version 1.2.565EHOV of 
+Time::PT, which was released on Sun Jun  5 14:17:24:31 2005.
 
 =head1 SYNOPSIS
 
   use Time::PT;
   
   my $f = Time::PT->new();
-
+  
   print "PipTime is: $f\n";
   print 'The Day-of-Week today is: ', $f->dow(), "\n";
 
 =head1 DESCRIPTION
+
+By default, Time::PT stores time descriptions precise to 60ths-
+of-a-second (0.016667 seconds).  The groundwork has been laid
+for sub-millisecond precision to be included later.
 
 This module has been adapted from the L<Time::Piece> module 
 written by Matt Sergeant <matt@sergeant.org> && Jarkko 
@@ -454,6 +458,12 @@ Revision history for Perl extension Time::PT:
 
 =over 4
 
+=item - 1.2.565EHOV  Sun Jun  5 14:17:24:31 2005
+
+* updated test.pl to work properly with Build.PL as well as Makefile.PL
+
+* updated License, minor version, && precision description
+
 =item - 1.0.42M3ChX  Sun Feb 22 03:12:43:33 2004
 
 * added 4NT option to color codes in Fields && color() members in Frame && PT
@@ -552,10 +562,10 @@ L<Time::Frame>
 
 Most source code should be Free!
   Code I have lawful authority over is && shall be!
-Copyright: (c) 2003, Pip Stuart.  All rights reserved.
-Copyleft :  I license this software under the GNU General Public
+Copyright: (c) 2002-2005, Pip Stuart.
+Copyleft : This software is licensed under the GNU General Public
   License (version 2).  Please consult the Free Software Foundation
-  (http://www.fsf.org) for important information about your freedom.
+  (http://FSF.Org) for important information about your freedom.
 
 =head1 AUTHOR
 
@@ -578,9 +588,9 @@ my $hirs = eval("use   Time::HiRes; 1") || 0;
 my $locl = eval("use   Time::Local; 1") || 0;
 my $zown = eval("use   Time::Zone;  1") || 0;
 #my $simp = eval("use Curses::Simp;  1") || 0;
-our $VERSION     = '1.0.42M3ChX'; # major . minor . PipTimeStamp
+our $VERSION     = '1.2.565EHOV'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
-# See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
+# Please see `perldoc Time::PT` for an explanation of $PTVR.
 our @EXPORT      = qw(pt ptcc);
 use overload 
   q("")  => \&_stringify,

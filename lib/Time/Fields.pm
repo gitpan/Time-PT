@@ -33,8 +33,8 @@ Time::Fields - abstract objects to store distinct time fields
 
 =head1 VERSION
 
-This documentation refers to version 1.0.42M3ChX of 
-Time::Fields, which was released on Sun Feb 22 03:12:43:33 2004.
+This documentation refers to version 1.2.565EHOV of 
+Time::Fields, which was released on Sun Jun  5 14:17:24:31 2005.
 
 =head1 SYNOPSIS
 
@@ -201,7 +201,7 @@ Revision history for Perl extension Time::Fields:
 
 =over 4
 
-=item - 1.0.42M3ChX  Sun Feb 22 03:12:43:33 2004
+=item - 1.2.565EHOV  Sun Jun  5 14:17:24:31 2005
 
 * combined Fields, Frame, && PT into one pkg (so see PT CHANGES section
     for updates to Fields or Frame)
@@ -268,10 +268,11 @@ Time::Frame && Time::PT
 
 Most source code should be Free!
   Code I have lawful authority over is && shall be!
-Copyright: (c) 2003, Pip Stuart.  All rights reserved.
-Copyleft :  I license this software under the GNU General Public
-  License (version 2).  Please consult the Free Software Foundation
-  (http://www.fsf.org) for important information about your freedom.
+Copyright: (c) 2003-2004, Pip Stuart.
+Copyleft : This software is licensed under the GNU General Public
+  License (version 2), && as such comes with NO WARRANTY.  Please
+  consult the Free Software Foundation (http://FSF.Org) for
+  important information about your freedom.
 
 =head1 AUTHOR
 
@@ -282,9 +283,9 @@ Pip Stuart <Pip@CPAN.Org>
 package Time::Fields;
 use strict;
 use vars qw( $AUTOLOAD );
-our $VERSION     = '1.0.42M3ChX'; # major . minor . PipTimeStamp
+our $VERSION     = '1.2.565EHOV'; # major . minor . PipTimeStamp
 our $PTVR        = $VERSION; $PTVR =~ s/^\d+\.\d+\.//; # strip major && minor
-# See http://Ax9.Org/pt?$PTVR && `perldoc Time::PT`
+# Please see `perldoc Time::PT` for an explanation of $PTVR.
 use overload 
   q("") => sub { # anonymous stringify()
              my @fdat = $_[0]->CYMDhmsfjz(); 

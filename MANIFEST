@@ -12,3 +12,4 @@ tz.txt
 MANIFEST.SKIP
 README
 Makefile.PL
+Build.PL
